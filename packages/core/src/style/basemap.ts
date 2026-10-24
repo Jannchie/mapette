@@ -94,22 +94,23 @@ export function createBasemap(o: BasemapOptions): StyleSpecification {
     layout: { "line-cap": "round", "line-join": "round" },
     paint: { "line-color": color, "line-width": width(w) },
   });
+  const landcover = (id: string, classes: string[], color: string): LayerSpecification => ({
+    id,
+    type: "fill",
+    source: SOURCE,
+    "source-layer": "landcover",
+    filter: ["match", ["get", "class"], classes, true, false],
+    paint: { "fill-color": color, "fill-opacity": ["interpolate", ["linear"], ["zoom"], 5, 0.6, 12, 1] },
+  });
 
   const layers: LayerSpecification[] = [
     { id: "land", type: "background", paint: { "background-color": c.land } },
 
     // ---- 地表 ----
-    {
-      id: "landcover",
-      type: "fill",
-      source: SOURCE,
-      "source-layer": "landcover",
-      filter: ["match", ["get", "class"], ["wood", "grass", "farmland", "wetland", "sand"], true, false],
-      paint: {
-        "fill-color": ["match", ["get", "class"], "wood", c.wood, "sand", c.sand, c.grass],
-        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 5, 0.6, 12, 1],
-      },
-    },
+    // 每类一层、颜色用常量：按要素取值的颜色（match）换主题时要等 worker 重新处理瓦片，比别的图层晚一拍变色，看起来在闪
+    landcover("landcover-wood", ["wood"], c.wood),
+    landcover("landcover-grass", ["grass", "farmland", "wetland"], c.grass),
+    landcover("landcover-sand", ["sand"], c.sand),
     {
       id: "urban",
       type: "fill",
