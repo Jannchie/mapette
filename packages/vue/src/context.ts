@@ -7,7 +7,9 @@ export interface MapContext {
   controller: ShallowRef<MapController | null>;
 }
 
-export const MAP_CONTEXT: InjectionKey<MapContext> = Symbol("mapette:map");
+// 用全局注册的 Symbol：打包工具偶尔会把本包加载成两份模块实例（例如 SSR 的依赖预构建与源码各一份），
+// 普通 Symbol 两份互不相等，里面的组件就 inject 不到外面 MapView 提供的上下文
+export const MAP_CONTEXT: InjectionKey<MapContext> = Symbol.for("mapette:map");
 
 /** 在 <MapView> 内部的组件里取得地图控制器 */
 export function useMap(): MapContext {

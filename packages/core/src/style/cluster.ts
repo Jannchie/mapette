@@ -44,6 +44,12 @@ export function setClusterOptions(map: MaplibreMap, source: string, o: Pick<Clus
   });
 }
 
+/** 气泡里的点（最多 limit 个），用来在弹出卡片里列出来 */
+export async function clusterLeaves(map: MaplibreMap, source: string, clusterId: number, limit = 50, offset = 0) {
+  const s = map.getSource(source) as GeoJSONSource | undefined;
+  return s ? s.getClusterLeaves(clusterId, limit, offset) : [];
+}
+
 /** 数量 → 显示文字：1234 → 1.2k，12345 → 12k */
 export function abbreviate(count: ExpressionSpecification): ExpressionSpecification {
   return [

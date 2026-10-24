@@ -5,7 +5,9 @@
   "type": "module",
   "license": "MIT",
   "author": "Jianqi Pan <jannchie@gmail.com>",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -13,7 +15,9 @@
     },
     "./mapette.css": "./dist/mapette.css"
   },
-  "sideEffects": ["**/*.css"],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "build": "vite build && tsc -p tsconfig.json && node -e \"require('fs').copyFileSync('src/mapette.css','dist/mapette.css')\"",
     "dev": "vite build --watch",
@@ -24,6 +28,11 @@
     "pmtiles": "^4.5.0"
   },
   "peerDependenciesMeta": {
-    "pmtiles": { "optional": true }
+    "pmtiles": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@floating-ui/dom": "^1.8.0"
   }
 }

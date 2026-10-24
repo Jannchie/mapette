@@ -16,3 +16,4 @@ export * from "./style";
 export { isDarkMode, watchDarkMode } from "./theme";
 export { watchViewportFeatures, type ViewportFeature, type ViewportOptions } from "./viewport";
 export { keyName, onShortcuts, type KeyHandler } from "./keyboard";
+export { MapPopover, type PopoverOptions } from "./popover";
