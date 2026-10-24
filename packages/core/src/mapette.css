@@ -435,6 +435,15 @@
   .mapette-sheet-full {
     height: calc(100dvh - var(--full-gap) - env(safe-area-inset-top));
   }
+  /* 没占满屏幕时上下滑动都归抽屉（sheet.ts），浏览器只处理横向滑动（横向滚动的列表） */
+  .mapette-sheet:not(.mapette-sheet-full),
+  .mapette-sheet:not(.mapette-sheet-full) * {
+    touch-action: pan-x;
+  }
+  .mapette-sheet-dragging {
+    user-select: none;
+    cursor: grabbing;
+  }
   .mapette-sheet-handle {
     display: block;
     flex: none;

@@ -24,8 +24,8 @@ const ctrl = await createMap({ container: el, preset: "compact", center: [135.77
 - **Basemap and overlays** – `createBasemap`, `clusterSource` / `clusterLayers`, `pointLayer`, `focusPointLayer`, `heatmapLayer`, `coneLayers` with `viewCone` / `fieldOfView` for camera directions.
 - **Controls** – `ScaleBar`, `MapButtons` (compass, locate, zoom), `ClusterExpander`.
 - **Markers and popovers** – `LocationMarker`, `PhotoPins` (photos on the map at street zoom), `MapPopover` (positioned with Floating UI inside the visible map; card or menu style; card style is off unless `popovers: true`).
-- **Layout** – `Sheet`: side panel on desktop, draggable bottom sheet on phones, reporting the area it covers.
-- **Theme** – CSS variables (`--mapette-*`, each split into `-light` / `-dark` halves), `applyTheme(el, theme)`, theme preference helpers and `themeInitScript` for a flash-free first paint.
+- **Layout** – `Sheet`: side panel on desktop, bottom sheet on phones that moves as one piece: below full height any vertical drag moves the whole sheet, at full height the content scrolls and pulling down from the top lowers the sheet. It reports the area it covers, and the map keeps its view still when that area changes.
+- **Theme** – CSS variables (`--mapette-*`, each split into `-light` / `-dark` halves), `applyTheme(el, theme)`, built-in `themes` (`neutral`, the default, and `cool`, with bluer land, buildings and roads), theme preference helpers and `themeInitScript` for a flash-free first paint.
 - **Locale and SEO** – path-prefix locales (`/`, `/zh-hant`, `/ja`, `/en`), built-in UI texts in four languages (`kitText`), `seoHead` for localized `<head>` data.
 - **Keyboard** – `onShortcuts` that ignores typing in inputs and IME composition.
 
