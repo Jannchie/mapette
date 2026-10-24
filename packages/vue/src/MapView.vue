@@ -27,6 +27,8 @@ const props = withDefaults(defineProps<{
   theme?: Theme;
   /** 显示比例尺（也可以在里面放 <ScaleBar /> 自己控制） */
   scale?: boolean;
+  /** 选中点的弹出卡片（MapPopover），默认关闭；点气泡弹出的菜单不受影响 */
+  popovers?: boolean;
   /** 其余 maplibre 选项（只在创建时生效） */
   options?: Partial<MapOptions>;
 }>(), {
@@ -43,6 +45,7 @@ const props = withDefaults(defineProps<{
   padding: undefined,
   theme: undefined,
   scale: false,
+  popovers: false,
   options: undefined,
 });
 
@@ -76,6 +79,7 @@ onMounted(async () => {
     dark: props.dark,
     keepSources: props.keepSources,
     padding: props.padding,
+    popovers: props.popovers,
     maplibre: props.options,
   });
   // 地图（异步）创建完成前组件已经卸载
@@ -95,6 +99,7 @@ onUnmounted(() => {
 });
 
 watch(() => props.dark, (d) => controller.value?.setDark(d));
+watch(() => props.popovers, (on) => controller.value?.setPopovers(on));
 watch(() => props.theme, (t) => {
   setTheme(t);
   controller.value?.refresh();

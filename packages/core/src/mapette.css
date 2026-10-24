@@ -481,26 +481,47 @@ img.mapette-img-failed {
   scrollbar-width: thin;
   scrollbar-color: var(--mapette-scroll-thumb) transparent;
 }
+/* 关闭按钮：卡片顶部多半是照片，用半透明深色圆底加白色的叉（不加描边阴影，盖在照片上也干净） */
 .mapette-popover-close {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 8px;
+  right: 8px;
   z-index: 1;
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   padding: 0;
-  color: var(--mapette-fg);
-  background: var(--mapette-bg);
+  color: #fff;
+  background: rgb(0 0 0 / 0.42);
   border: 0;
   border-radius: 50%;
-  box-shadow: var(--mapette-shadow);
-  backdrop-filter: var(--mapette-glass);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   cursor: pointer;
+  transition: background-color 0.15s;
 }
 .mapette-popover-close:hover {
+  background: rgb(0 0 0 / 0.6);
+}
+.mapette-popover-close:focus-visible {
+  outline: 2px solid var(--mapette-accent);
+  outline-offset: 2px;
+}
+/* 菜单没有照片：淡灰底的小圆按钮，和标题同一行 */
+.mapette-popover-menu .mapette-popover-close {
+  top: 7px;
+  right: 7px;
+  width: 22px;
+  height: 22px;
+  color: var(--mapette-muted);
   background: var(--mapette-hover);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.mapette-popover-menu .mapette-popover-close:hover {
+  color: var(--mapette-fg);
+  background: var(--mapette-line);
 }
 /* 指向位置的小尖角：在卡片朝向点的那一边 */
 .mapette-popover-arrow {

@@ -38,6 +38,7 @@ export class MapPopover {
     el.style.top = "0";
     ctrl.map.on("move", this.update);
     ctrl.map.on("resize", this.update);
+    ctrl.map.on("mapette:popovers", this.update);
     this.resize.observe(el);
     void this.place();
   }
@@ -66,6 +67,10 @@ export class MapPopover {
   }
 
   private async place() {
+    // 卡片形态的弹出卡片可以整体关掉（createMap 的 popovers，默认关闭）；菜单形态不受影响
+    const off = !this.o.menu && !this.ctrl.popovers;
+    this.el.style.display = off ? "none" : "";
+    if (off) return;
     const area = this.visibleArea();
     const { x, y, placement, middlewareData } = await computePosition(this.reference(), this.el, {
       placement: this.o.placement,
@@ -105,6 +110,7 @@ export class MapPopover {
     this.resize.disconnect();
     this.ctrl.map.off("move", this.update);
     this.ctrl.map.off("resize", this.update);
+    this.ctrl.map.off("mapette:popovers", this.update);
     this.el.classList.remove("mapette-popover");
   }
 }

@@ -26,6 +26,8 @@ const props = withDefaults(defineProps<{
   shortcuts?: Record<string, KeyHandler>;
   /** 关掉内置快捷键（+ − 缩放、L 定位、N 指北、Esc 返回） */
   keyboard?: boolean;
+  /** 选中点的弹出卡片，默认关闭（详情已经在面板里）；点气泡弹出的菜单不受影响 */
+  popovers?: boolean;
 }>(), {
   mapStyle: undefined,
   locale: undefined,
@@ -39,6 +41,7 @@ const props = withDefaults(defineProps<{
   labels: undefined,
   shortcuts: () => ({}),
   keyboard: true,
+  popovers: false,
 });
 
 const emit = defineEmits<{
@@ -102,6 +105,7 @@ defineExpose({ controller, snap, panel });
       :hash="hash"
       :attribution="attribution"
       :padding="padding"
+      :popovers="popovers"
       @load="onLoad"
     >
       <ScaleBar />

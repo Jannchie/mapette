@@ -56,6 +56,11 @@ export interface MapetteOptions {
   keepSources?: string[];
   /** 被浮层面板挡住的边距，地图的可视中心会避开它 */
   padding?: PaddingOptions;
+  /**
+   * 选中点的弹出卡片（MapPopover 的卡片形态）。默认关闭：详情通常已经在面板里，卡片会重复、挡住地图。
+   * 菜单形态（点气泡弹出的列表）不受影响
+   */
+  popovers?: boolean;
   /** 其余 maplibre 选项（最后合并，优先级最高） */
   maplibre?: Partial<MapOptions>;
 }
@@ -65,6 +70,9 @@ export interface MapController {
   /** maplibre-gl 模块（按需加载的那一份），用来创建 Marker 等 */
   lib: Maplibre;
   readonly preset: Preset;
+  /** 是否显示选中点的弹出卡片（见 MapetteOptions.popovers） */
+  readonly popovers: boolean;
+  setPopovers(enabled: boolean): void;
   /** undefined 表示跟随页面 */
   setDark(dark: boolean | undefined): void;
   setStyle(style: StyleInput | undefined): void;
@@ -208,10 +216,18 @@ export async function createMap(o: MapetteOptions): Promise<MapController> {
     if (changed && dark === undefined) void restyle();
   });
 
+  let popovers = o.popovers ?? false;
   return {
     map,
     lib,
     preset,
+    get popovers() {
+      return popovers;
+    },
+    setPopovers(enabled) {
+      popovers = enabled;
+      map.fire("mapette:popovers"); // 已经打开的卡片据此显示或隐藏
+    },
     setDark(next) {
       const before = isDark();
       dark = next;
