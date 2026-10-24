@@ -1,0 +1,28 @@
+{
+  "name": "@mapette/vue",
+  "version": "0.1.0",
+  "description": "Vue bindings for @mapette/core.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Jianqi Pan <jannchie@gmail.com>",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "sideEffects": ["**/*.css"],
+  "scripts": {
+    "build": "vite build && vue-tsc -p tsconfig.json",
+    "dev": "vite build --watch",
+    "typecheck": "vue-tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@mapette/core": "workspace:^"
+  },
+  "peerDependencies": {
+    "maplibre-gl": "^5.9.0",
+    "vue": "^3.5.0"
+  }
+}

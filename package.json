@@ -1,55 +1,21 @@
 {
-  "name": "meisho",
-  "version": "0.1.0",
-  "description": "Map UI kit for place-and-photo sites: an Apple Maps–like MapLibre basemap, heatmap-to-points overlays, photo pins and a side panel / bottom sheet layout for Vue.",
+  "name": "mapette-monorepo",
+  "private": true,
   "type": "module",
-  "license": "MIT",
-  "author": "Jianqi Pan <jannchie@gmail.com>",
   "packageManager": "pnpm@10.11.1",
-  "files": [
-    "dist"
-  ],
-  "exports": {
-    "./style": {
-      "types": "./dist/style/index.d.ts",
-      "import": "./dist/style.js"
-    },
-    "./vue": {
-      "types": "./dist/vue/index.d.ts",
-      "import": "./dist/vue.js"
-    },
-    "./meisho.css": "./dist/meisho.css"
-  },
-  "sideEffects": [
-    "**/*.css"
-  ],
   "scripts": {
-    "build": "vite build && vue-tsc -p tsconfig.build.json",
-    "dev": "vite build --watch",
-    "typecheck": "vue-tsc --noEmit"
-  },
-  "peerDependencies": {
-    "maplibre-gl": "^5.9.0",
-    "pmtiles": "^4.5.0",
-    "vue": "^3.5.0"
-  },
-  "peerDependenciesMeta": {
-    "pmtiles": {
-      "optional": true
-    }
-  },
-  "dependencies": {
-    "@jannchie/icons": "0.12.0",
-    "@jannchie/icons-vue": "0.12.0"
+    "build": "pnpm -r build",
+    "dev": "pnpm -r --parallel dev",
+    "typecheck": "pnpm -r typecheck"
   },
   "devDependencies": {
     "@types/geojson": "^7946.0.16",
-    "@vitejs/plugin-vue": "^6.0.10",
-    "maplibre-gl": "^5.24.0",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "maplibre-gl": "^5.9.0",
     "pmtiles": "^4.5.0",
     "typescript": "~5.9.3",
-    "vite": "^8.3.5",
-    "vue": "^3.5.44",
+    "vite": "^8.0.10",
+    "vue": "^3.5.30",
     "vue-tsc": "^3.3.13"
   }
 }

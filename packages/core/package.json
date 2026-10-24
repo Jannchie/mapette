@@ -1,0 +1,29 @@
+{
+  "name": "@mapette/core",
+  "version": "0.1.0",
+  "description": "Framework-agnostic map kit for place-and-photo sites: an Apple Maps–like MapLibre basemap, heatmap-to-points overlays, photo pins, location markers and a side panel / bottom sheet.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Jianqi Pan <jannchie@gmail.com>",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./mapette.css": "./dist/mapette.css"
+  },
+  "sideEffects": ["**/*.css"],
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.json && node -e \"require('fs').copyFileSync('src/mapette.css','dist/mapette.css')\"",
+    "dev": "vite build --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "peerDependencies": {
+    "maplibre-gl": "^5.9.0",
+    "pmtiles": "^4.5.0"
+  },
+  "peerDependenciesMeta": {
+    "pmtiles": { "optional": true }
+  }
+}

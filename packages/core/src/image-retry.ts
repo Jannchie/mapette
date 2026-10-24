@@ -1,5 +1,5 @@
 // 图片加载失败（网络抖动、图床短暂拒绝并发请求）时退避重试：1、2、4、8 秒后各试一次。
-// 等待期间换成透明空图，显示占位底色而不是浏览器的破图边框；仍失败就加上 meisho-img-failed。
+// 等待期间换成透明空图，显示占位底色而不是浏览器的破图边框；仍失败就加上 mapette-img-failed。
 const RETRIES = 4;
 const BLANK = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 
@@ -12,7 +12,7 @@ export function retryImage(img: HTMLImageElement, onGiveUp?: () => void): void {
   img.dataset.src = url.href;
   img.src = BLANK;
   if (tries >= RETRIES) {
-    img.classList.add("meisho-img-failed");
+    img.classList.add("mapette-img-failed");
     onGiveUp?.();
     return;
   }

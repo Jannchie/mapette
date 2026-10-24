@@ -7,22 +7,15 @@ settings:
 importers:
 
   .:
-    dependencies:
-      '@jannchie/icons':
-        specifier: 0.12.0
-        version: 0.12.0
-      '@jannchie/icons-vue':
-        specifier: 0.12.0
-        version: 0.12.0(@jannchie/icons@0.12.0)(vue@3.5.44(typescript@5.9.3))
     devDependencies:
       '@types/geojson':
         specifier: ^7946.0.16
         version: 7946.0.16
       '@vitejs/plugin-vue':
-        specifier: ^6.0.10
+        specifier: ^6.0.1
         version: 6.0.10(vite@8.3.5)(vue@3.5.44(typescript@5.9.3))
       maplibre-gl:
-        specifier: ^5.24.0
+        specifier: ^5.9.0
         version: 5.24.0
       pmtiles:
         specifier: ^4.5.0
@@ -31,14 +24,57 @@ importers:
         specifier: ~5.9.3
         version: 5.9.3
       vite:
-        specifier: ^8.3.5
+        specifier: ^8.0.10
         version: 8.3.5
       vue:
-        specifier: ^3.5.44
+        specifier: ^3.5.30
         version: 3.5.44(typescript@5.9.3)
       vue-tsc:
         specifier: ^3.3.13
         version: 3.3.13(typescript@5.9.3)
+
+  packages/core:
+    dependencies:
+      maplibre-gl:
+        specifier: ^5.9.0
+        version: 5.24.0
+      pmtiles:
+        specifier: ^4.5.0
+        version: 4.5.0
+
+  packages/vue:
+    dependencies:
+      '@mapette/core':
+        specifier: workspace:^
+        version: link:../core
+      maplibre-gl:
+        specifier: ^5.9.0
+        version: 5.24.0
+      vue:
+        specifier: ^3.5.0
+        version: 3.5.44(typescript@5.9.3)
+
+  playground:
+    dependencies:
+      '@mapette/core':
+        specifier: workspace:*
+        version: link:../packages/core
+      '@mapette/vue':
+        specifier: workspace:*
+        version: link:../packages/vue
+      maplibre-gl:
+        specifier: ^5.9.0
+        version: 5.24.0
+      vue:
+        specifier: ^3.5.30
+        version: 3.5.44(typescript@5.9.3)
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.1
+        version: 6.0.10(vite@8.3.5)(vue@3.5.44(typescript@5.9.3))
+      vite:
+        specifier: ^8.0.10
+        version: 8.3.5
 
 packages:
 
@@ -58,17 +94,6 @@ packages:
   '@babel/types@7.29.11':
     resolution: {integrity: sha512-WCsemW40Cpc6gouC1SrY6PBaZ+oLRlEVY9XBvZBI7il/HyUrb2nJ505wE1MHEFyDZNnrWDEuy4jL50WVHfTTSQ==}
     engines: {node: '>=6.9.0'}
-
-  '@jannchie/icons-vue@0.12.0':
-    resolution: {integrity: sha512-3WIv590mkZ92ZNXfqUK+FgcqSqPCPnYX/M1/d8bDpKojh+RGh9jPNTDSkX3WTvmHZJ9ZVmCxJvCioAahTA4EgA==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@jannchie/icons': ^0.12.0
-      vue: '>=3.3.0'
-
-  '@jannchie/icons@0.12.0':
-    resolution: {integrity: sha512-ZKe9oeBrYyMecaj9IxywnBH3eHDcXnIPaE2pwZXoGEG+s9RI+afk3lz7dY/HmNJc3N9zNSP2Y3AD+ylOjbAE3Q==}
-    engines: {node: '>=18'}
 
   '@jridgewell/sourcemap-codec@1.6.0':
     resolution: {integrity: sha512-T7jf+5zgsZHwNJ4lvQ7/aezbyk0nNX+zJVWpmHA7VYsEx7a7qr5Rg5IbtJFqkgze5Y2sruq1RUY8Q837Od7iFw==}
@@ -523,13 +548,6 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.29.11
       '@babel/helper-validator-identifier': 7.29.7
-
-  '@jannchie/icons-vue@0.12.0(@jannchie/icons@0.12.0)(vue@3.5.44(typescript@5.9.3))':
-    dependencies:
-      '@jannchie/icons': 0.12.0
-      vue: 3.5.44(typescript@5.9.3)
-
-  '@jannchie/icons@0.12.0': {}
 
   '@jridgewell/sourcemap-codec@1.6.0': {}
 

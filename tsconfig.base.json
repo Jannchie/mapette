@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["vite/client"],
-    "noEmit": true
-  },
-  "include": ["src/**/*.ts", "src/**/*.vue"]
+    "declaration": true,
+    "emitDeclarationOnly": true
+  }
 }

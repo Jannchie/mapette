@@ -1,0 +1,457 @@
+/* mapette 的全部配色，参照 Apple 地图：冷调素净的底、明亮的水与草绿、白色道路、暖黄高速、毛玻璃面板。
+   面板与控件用 --mapette-*，地图皮肤用 --mapette-map-*（readPalette（style/palette.ts） 读取）。
+   每个颜色用 light-dark(亮色, 暗色) 只写一处，用哪一套由 color-scheme 决定。
+   全部写在 :where() 里（特异性为 0）。每个颜色拆成 --x-light / --x-dark 两半再组合成 --x：
+   在 :root 上覆盖其中一半即可只改亮色或暗色；在别的元素上局部换色请用 applyTheme（它会在那个元素上重新组合）。 */
+:where(:root) {
+  color-scheme: light dark;
+  --mapette-bg-light: rgb(255 255 255 / 0.96);
+  --mapette-bg-dark: rgb(30 30 32 / 0.95);
+  --mapette-bg: light-dark(var(--mapette-bg-light), var(--mapette-bg-dark));
+  --mapette-glass: none;
+  --mapette-bg-solid-light: #ffffff;
+  --mapette-bg-solid-dark: #1e1e20;
+  --mapette-bg-solid: light-dark(var(--mapette-bg-solid-light), var(--mapette-bg-solid-dark));
+  --mapette-fg-light: #1d1d1f;
+  --mapette-fg-dark: #f5f5f7;
+  --mapette-fg: light-dark(var(--mapette-fg-light), var(--mapette-fg-dark));
+  --mapette-muted-light: #86868b;
+  --mapette-muted-dark: #98989d;
+  --mapette-muted: light-dark(var(--mapette-muted-light), var(--mapette-muted-dark));
+  --mapette-line-light: rgb(0 0 0 / 0.08);
+  --mapette-line-dark: rgb(255 255 255 / 0.1);
+  --mapette-line: light-dark(var(--mapette-line-light), var(--mapette-line-dark));
+  --mapette-hover-light: rgb(0 0 0 / 0.045);
+  --mapette-hover-dark: rgb(255 255 255 / 0.07);
+  --mapette-hover: light-dark(var(--mapette-hover-light), var(--mapette-hover-dark));
+  --mapette-accent-light: #d2405a;
+  --mapette-accent-dark: #ee6a80;
+  --mapette-accent: light-dark(var(--mapette-accent-light), var(--mapette-accent-dark)); /* 茜色：和蓝水、青绿地面形成冷暖对比 */
+  --mapette-scroll-thumb-light: rgb(0 0 0 / 0.16);
+  --mapette-scroll-thumb-dark: rgb(255 255 255 / 0.18);
+  --mapette-scroll-thumb: light-dark(var(--mapette-scroll-thumb-light), var(--mapette-scroll-thumb-dark));
+  --mapette-scroll-thumb-hover-light: rgb(0 0 0 / 0.32);
+  --mapette-scroll-thumb-hover-dark: rgb(255 255 255 / 0.34);
+  --mapette-scroll-thumb-hover: light-dark(var(--mapette-scroll-thumb-hover-light), var(--mapette-scroll-thumb-hover-dark));
+
+  --mapette-map-land-light: #f2f4f6;
+
+  --mapette-map-land-dark: #212327;
+
+  --mapette-map-land: light-dark(var(--mapette-map-land-light), var(--mapette-map-land-dark));
+  --mapette-map-urban-light: #eaedf0;
+  --mapette-map-urban-dark: #26292d;
+  --mapette-map-urban: light-dark(var(--mapette-map-urban-light), var(--mapette-map-urban-dark));
+  --mapette-map-wood-light: #c3e6cf;
+  --mapette-map-wood-dark: #1b332a;
+  --mapette-map-wood: light-dark(var(--mapette-map-wood-light), var(--mapette-map-wood-dark));
+  --mapette-map-grass-light: #d3ecda;
+  --mapette-map-grass-dark: #1e342c;
+  --mapette-map-grass: light-dark(var(--mapette-map-grass-light), var(--mapette-map-grass-dark));
+  --mapette-map-park-light: #bde3c9;
+  --mapette-map-park-dark: #1c3a2e;
+  --mapette-map-park: light-dark(var(--mapette-map-park-light), var(--mapette-map-park-dark));
+  --mapette-map-sand-light: #f2e7ca;
+  --mapette-map-sand-dark: #3a3529;
+  --mapette-map-sand: light-dark(var(--mapette-map-sand-light), var(--mapette-map-sand-dark));
+  --mapette-map-water-light: #a7d3f2;
+  --mapette-map-water-dark: #1b3a55;
+  --mapette-map-water: light-dark(var(--mapette-map-water-light), var(--mapette-map-water-dark));
+  --mapette-map-building-light: #e1e4e8;
+  --mapette-map-building-dark: #2f3237;
+  --mapette-map-building: light-dark(var(--mapette-map-building-light), var(--mapette-map-building-dark));
+  --mapette-map-building-line-light: #d6dadf;
+  --mapette-map-building-line-dark: #383c42;
+  --mapette-map-building-line: light-dark(var(--mapette-map-building-line-light), var(--mapette-map-building-line-dark));
+  --mapette-map-road-light: #ffffff;
+  --mapette-map-road-dark: #3b3b3e;
+  --mapette-map-road: light-dark(var(--mapette-map-road-light), var(--mapette-map-road-dark));
+  --mapette-map-road-casing-light: #dde1e6;
+  --mapette-map-road-casing-dark: #212327;
+  --mapette-map-road-casing: light-dark(var(--mapette-map-road-casing-light), var(--mapette-map-road-casing-dark));
+  --mapette-map-major-light: #ffffff;
+  --mapette-map-major-dark: #4a4a4e;
+  --mapette-map-major: light-dark(var(--mapette-map-major-light), var(--mapette-map-major-dark));
+  --mapette-map-major-casing-light: #d0d5dc;
+  --mapette-map-major-casing-dark: #212327;
+  --mapette-map-major-casing: light-dark(var(--mapette-map-major-casing-light), var(--mapette-map-major-casing-dark));
+  --mapette-map-motorway-light: #fcd26a;
+  --mapette-map-motorway-dark: #8a7140;
+  --mapette-map-motorway: light-dark(var(--mapette-map-motorway-light), var(--mapette-map-motorway-dark));
+  --mapette-map-motorway-casing-light: #e8b44a;
+  --mapette-map-motorway-casing-dark: #212327;
+  --mapette-map-motorway-casing: light-dark(var(--mapette-map-motorway-casing-light), var(--mapette-map-motorway-casing-dark));
+  --mapette-map-rail-light: #b0b5bc;
+  --mapette-map-rail-dark: #5a5a5e;
+  --mapette-map-rail: light-dark(var(--mapette-map-rail-light), var(--mapette-map-rail-dark));
+  --mapette-map-label-light: #3a3a3c;
+  --mapette-map-label-dark: #ebebf0;
+  --mapette-map-label: light-dark(var(--mapette-map-label-light), var(--mapette-map-label-dark));
+  --mapette-map-label-muted-light: #8e8e93;
+  --mapette-map-label-muted-dark: #98989d;
+  --mapette-map-label-muted: light-dark(var(--mapette-map-label-muted-light), var(--mapette-map-label-muted-dark));
+  --mapette-map-water-label-light: #3f86bf;
+  --mapette-map-water-label-dark: #6aa6d6;
+  --mapette-map-water-label: light-dark(var(--mapette-map-water-label-light), var(--mapette-map-water-label-dark));
+  --mapette-map-depth-shelf-light: #93c6ec;
+  --mapette-map-depth-shelf-dark: #173450;
+  --mapette-map-depth-shelf: light-dark(var(--mapette-map-depth-shelf-light), var(--mapette-map-depth-shelf-dark));
+  --mapette-map-depth-mid-light: #69a2d8;
+  --mapette-map-depth-mid-dark: #10273f;
+  --mapette-map-depth-mid: light-dark(var(--mapette-map-depth-mid-light), var(--mapette-map-depth-mid-dark));
+  --mapette-map-depth-deep-light: #346cb0;
+  --mapette-map-depth-deep-dark: #07172b;
+  --mapette-map-depth-deep: light-dark(var(--mapette-map-depth-deep-light), var(--mapette-map-depth-deep-dark));
+  --mapette-map-hillshade-shadow-light: rgb(40 55 80 / 0.15);
+  --mapette-map-hillshade-shadow-dark: rgb(0 0 0 / 0.35);
+  --mapette-map-hillshade-shadow: light-dark(var(--mapette-map-hillshade-shadow-light), var(--mapette-map-hillshade-shadow-dark));
+  --mapette-map-hillshade-highlight-light: rgb(255 255 255 / 0.25);
+  --mapette-map-hillshade-highlight-dark: rgb(255 255 255 / 0.04);
+  --mapette-map-hillshade-highlight: light-dark(var(--mapette-map-hillshade-highlight-light), var(--mapette-map-hillshade-highlight-dark));
+  --mapette-map-focus-ring-light: #1d1d1f;
+  --mapette-map-focus-ring-dark: #f5f5f7;
+  --mapette-map-focus-ring: light-dark(var(--mapette-map-focus-ring-light), var(--mapette-map-focus-ring-dark));
+  /* 热力图色带：淡紫 → 品红 → 珊瑚橙 → 暖金，越密越亮，像城市夜景的灯光 */
+  --mapette-map-heat-1-light: #c070a0;
+  --mapette-map-heat-1-dark: #b0609a;
+  --mapette-map-heat-1: light-dark(var(--mapette-map-heat-1-light), var(--mapette-map-heat-1-dark));
+  --mapette-map-heat-2-light: #d2405a;
+  --mapette-map-heat-2-dark: #e0506a;
+  --mapette-map-heat-2: light-dark(var(--mapette-map-heat-2-light), var(--mapette-map-heat-2-dark));
+  --mapette-map-heat-3-light: #ec6a48;
+  --mapette-map-heat-3-dark: #f87650;
+  --mapette-map-heat-3: light-dark(var(--mapette-map-heat-3-light), var(--mapette-map-heat-3-dark));
+  --mapette-map-heat-4-light: #ff9a5c;
+  --mapette-map-heat-4-dark: #ffa860;
+  --mapette-map-heat-4: light-dark(var(--mapette-map-heat-4-light), var(--mapette-map-heat-4-dark));
+  --mapette-map-heat-5-light: #ffd36b;
+  --mapette-map-heat-5-dark: #ffe08a;
+  --mapette-map-heat-5: light-dark(var(--mapette-map-heat-5-light), var(--mapette-map-heat-5-dark));
+  --mapette-map-space-light: #e4e9f0;
+  --mapette-map-space-dark: #07090d;
+  --mapette-map-space: light-dark(var(--mapette-map-space-light), var(--mapette-map-space-dark));
+  --mapette-map-horizon-light: #cfe3f5;
+  --mapette-map-horizon-dark: #1d3c5c;
+  --mapette-map-horizon: light-dark(var(--mapette-map-horizon-light), var(--mapette-map-horizon-dark));
+
+  /* 浮层与地图的分隔：一圈细描边 + 很淡的贴身投影，不要大面积的阴影 */
+  --mapette-shadow-color-light: rgb(0 0 0 / 0.06);
+  --mapette-shadow-color-dark: rgb(0 0 0 / 0.25);
+  --mapette-shadow-color: light-dark(var(--mapette-shadow-color-light), var(--mapette-shadow-color-dark));
+  --mapette-shadow-edge-light: rgb(0 0 0 / 0.08);
+  --mapette-shadow-edge-dark: rgb(255 255 255 / 0.08);
+  --mapette-shadow-edge: light-dark(var(--mapette-shadow-edge-light), var(--mapette-shadow-edge-dark));
+  --mapette-shadow: 0 0 0 1px var(--mapette-shadow-edge), 0 2px 6px var(--mapette-shadow-color);
+}
+
+/* 常见的手动切换方式：<html data-theme="light|dark">，或 Tailwind 等的 <html class="dark"> */
+:where(:root[data-theme="light"]) {
+  color-scheme: light;
+}
+:where(:root[data-theme="dark"], :root.dark) {
+  color-scheme: dark;
+}
+
+/* 鼠标设备（多为桌面）才用半透明磨砂：磨砂在地图移动时每帧都要重新模糊，弱 GPU 的手机上会掉帧 */
+@media (hover: hover) and (pointer: fine) {
+  :where(:root) {
+    --mapette-bg-light: rgb(255 255 255 / 0.8);
+    --mapette-bg-dark: rgb(30 30 32 / 0.78);
+    --mapette-glass: blur(16px);
+  }
+}
+/* 用户在系统里要求降低透明度时退回不透明 */
+@media (prefers-reduced-transparency: reduce) {
+  :where(:root) {
+    --mapette-bg-light: rgb(255 255 255 / 0.96);
+    --mapette-bg-dark: rgb(30 30 32 / 0.95);
+    --mapette-glass: none;
+  }
+}
+
+/* ---- 全屏骨架（MapExplorer）：铺满视口，地图在下、面板浮在上面 ---- */
+.mapette-explorer {
+  position: fixed;
+  inset: 0;
+}
+
+/* ---- 地图容器 ---- */
+/* MapView 外壳铺满父元素：全屏用法给父元素全屏尺寸，小地图用法给父元素卡片尺寸 */
+.mapette-map-view {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+/* 容器同时带着 maplibre 的 .maplibregl-map { position: relative }，两边特异性相同时谁后加载谁赢，这里多一层选择器保证盖过它 */
+.mapette-map-view > .mapette-map.maplibregl-map {
+  position: absolute;
+  inset: 0;
+}
+/* 缩到最小时地球之外露出的是容器背景 */
+.mapette-map.maplibregl-map {
+  background: radial-gradient(circle at 60% 50%, var(--mapette-map-horizon), var(--mapette-map-space) 70%);
+}
+.mapette-map .maplibregl-ctrl-geolocate {
+  display: none;
+}
+
+/* ---- 比例尺 ---- */
+.mapette-scale {
+  position: absolute;
+  left: calc(var(--mapette-pad-left, 0px) + 12px);
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--mapette-fg);
+  background: var(--mapette-bg);
+  border-radius: 8px;
+  box-shadow: var(--mapette-shadow);
+  backdrop-filter: var(--mapette-glass);
+  pointer-events: none;
+}
+.mapette-scale-bar {
+  display: flex;
+  height: 5px;
+  border: 1px solid var(--mapette-fg);
+  box-sizing: content-box;
+}
+.mapette-scale-bar i {
+  flex: 1;
+  background: var(--mapette-fg);
+}
+.mapette-scale-bar i:nth-child(even) {
+  background: var(--mapette-bg-solid);
+}
+@media (max-width: 640px) {
+  .mapette-explore .mapette-scale {
+    top: calc(env(safe-area-inset-top) + 10px);
+    bottom: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* 小地图：比例尺贴左下角，紧凑一些 */
+.mapette-compact .mapette-scale,
+.mapette-static .mapette-scale {
+  left: 8px;
+  bottom: 8px;
+  padding: 2px 6px;
+  font-size: 10px;
+}
+
+/* ---- 定位与缩放按钮 ---- */
+.mapette-buttons {
+  position: absolute;
+  right: 12px;
+  bottom: calc(var(--mapette-pad-bottom, 0px) + 36px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mapette-buttons-group {
+  display: flex;
+  flex-direction: column;
+}
+.mapette-buttons button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  color: var(--mapette-fg);
+  background: var(--mapette-bg);
+  border: 0;
+  border-radius: 10px;
+  box-shadow: var(--mapette-shadow);
+  backdrop-filter: var(--mapette-glass);
+  cursor: pointer;
+}
+.mapette-buttons-group button:first-child {
+  border-radius: 10px 10px 0 0;
+  box-shadow: var(--mapette-shadow), inset 0 -0.5px 0 var(--mapette-line);
+}
+.mapette-buttons-group button:last-child {
+  border-radius: 0 0 10px 10px;
+}
+.mapette-buttons button:hover {
+  background: var(--mapette-hover);
+}
+/* 小地图：按钮放到右上角（右下角是署名 ⓘ），尺寸紧凑一些 */
+.mapette-compact .mapette-buttons,
+.mapette-static .mapette-buttons {
+  top: 8px;
+  right: 8px;
+  bottom: auto;
+}
+.mapette-compact .mapette-buttons button,
+.mapette-static .mapette-buttons button {
+  width: 30px;
+  height: 30px;
+}
+
+/* ---- 位置点 ---- */
+.mapette-location {
+  position: relative;
+  width: 14px;
+  height: 14px;
+}
+.mapette-location span,
+.mapette-location::before {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--mapette-accent);
+}
+.mapette-location span {
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.9), 0 1px 4px rgb(0 0 0 / 0.3);
+}
+.mapette-location.pulse::before {
+  content: "";
+  opacity: 0.6;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .mapette-location.pulse::before {
+    animation: mapette-ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+}
+@keyframes mapette-ping {
+  75%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* ---- 照片标记 ---- */
+.mapette-photo-pin {
+  /* 不要设 position：maplibre 靠 .maplibregl-marker 的 absolute 与 transform 定位标记 */
+  display: block;
+  width: 112px;
+  height: 76px;
+  padding: 3px;
+  background: #ffffff;
+  border: 0;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.18);
+  cursor: pointer;
+}
+/* 选中的照片：主题色描边，并压在其他照片上面 */
+.maplibregl-marker:has(.mapette-photo-pin.focus) {
+  z-index: 1;
+}
+.mapette-photo-pin.focus,
+.mapette-photo-pin.focus::after {
+  background: var(--mapette-accent);
+}
+.mapette-photo-pin::after {
+  /* 指向位置的小尖角 */
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 0 0 2px 0;
+}
+.mapette-photo-pin img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 7px;
+  background: #e5e7eb;
+}
+
+/* ---- 面板 / 抽屉 ---- */
+.mapette-sheet {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  bottom: 12px;
+  width: var(--mapette-sheet-width, 380px);
+  display: flex;
+  flex-direction: column;
+  color: var(--mapette-fg);
+  background: var(--mapette-bg);
+  border-radius: 16px;
+  box-shadow: var(--mapette-shadow);
+  backdrop-filter: var(--mapette-glass);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.mapette-sheet-handle {
+  display: none;
+}
+.mapette-sheet-header,
+.mapette-sheet-footer {
+  flex: none;
+}
+.mapette-sheet-header {
+  border-bottom: 1px solid var(--mapette-line);
+}
+.mapette-sheet-footer {
+  border-top: 1px solid var(--mapette-line);
+}
+.mapette-sheet-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--mapette-scroll-thumb) transparent;
+}
+@media (max-width: 640px) {
+  .mapette-sheet {
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    padding-bottom: env(safe-area-inset-bottom);
+    border-radius: 16px 16px 0 0;
+    transition: height 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .mapette-sheet-peek {
+    height: calc(var(--peek) + env(safe-area-inset-bottom));
+  }
+  .mapette-sheet-half {
+    height: var(--half);
+  }
+  .mapette-sheet-full {
+    height: calc(100dvh - var(--full-gap) - env(safe-area-inset-top));
+  }
+  .mapette-sheet-handle {
+    display: block;
+    flex: none;
+    height: 22px;
+    margin-bottom: -10px;
+    touch-action: none;
+    cursor: grab;
+  }
+  .mapette-sheet-handle::before {
+    content: "";
+    display: block;
+    width: 36px;
+    height: 5px;
+    margin: 8px auto 0;
+    border-radius: 3px;
+    background: var(--mapette-muted);
+    opacity: 0.45;
+  }
+}
+
+/* 图片重试用尽：占位底色上显示「图片不可用」 */
+img.mapette-img-failed {
+  color: transparent;
+  font-size: 0;
+  background: var(--mapette-hover) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2386868b' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='16' rx='2'/%3E%3Cpath d='M3 16l5-5 4 4 3-3 6 6'/%3E%3Cpath d='M3 3l18 18'/%3E%3C/svg%3E") center / min(28px, 40%) no-repeat;
+}
