@@ -9,3 +9,4 @@ export { default as MapFooter, type FooterSource } from "./MapFooter.vue";
 export { default as MapPopover } from "./MapPopover.vue";
 export { default as MapSheet } from "./MapSheet.vue";
 export { default as MapView } from "./MapView.vue";
+export { default as UpdateToast } from "./UpdateToast.vue";

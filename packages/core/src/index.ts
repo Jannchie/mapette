@@ -20,3 +20,4 @@ export { MapPopover, type PopoverOptions } from "./popover";
 export { baseShortcuts, KIT_TEXT, kitText, LOCALE_NAMES, LOCALE_PREFIX, localeFromSegment, localePath, LOCALES, stripLocale, switchLocaleUrl, type KitText } from "./locale";
 export { applyThemePref, nextThemePref, readThemePref, saveThemePref, THEME_PREFS, themeInitScript, type ThemePref } from "./theme-pref";
 export { seoHead, type SeoLink, type SeoOptions } from "./seo";
+export { registerServiceWorker, type ServiceWorkerOptions, type ServiceWorkerUpdate } from "./pwa";

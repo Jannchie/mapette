@@ -25,9 +25,10 @@ const ctrl = await createMap({ container: el, preset: "compact", center: [135.77
 - **Controls** – `ScaleBar`, `MapButtons` (compass, locate, zoom), `ClusterExpander`.
 - **Markers and popovers** – `LocationMarker`, `PhotoPins` (photos on the map at street zoom), `MapPopover` (positioned with Floating UI inside the visible map; card or menu style; card style is off unless `popovers: true`).
 - **Layout** – `Sheet`: side panel on desktop, bottom sheet on phones that moves as one piece: below full height any vertical drag moves the whole sheet, at full height the content scrolls and pulling down from the top lowers the sheet. It reports the area it covers, and the map keeps its view still when that area changes.
-- **Theme** – CSS variables (`--mapette-*`, each split into `-light` / `-dark` halves), `applyTheme(el, theme)`, built-in `themes` (`neutral`, the default, and `cool`, with bluer land, buildings and roads), theme preference helpers and `themeInitScript` for a flash-free first paint.
+- **Theme** – CSS variables (`--mapette-*`, each split into `-light` / `-dark` halves), `applyTheme(el, theme)`, built-in `themes`, each with a day and a night half (`neutral`, the default; `cool`, with bluer land, buildings and roads; `warm`, paper-like; `mono`, grayscale), theme preference helpers and `themeInitScript` for a flash-free first paint.
 - **Locale and SEO** – path-prefix locales (`/`, `/zh-hant`, `/ja`, `/en`), built-in UI texts in four languages (`kitText`), `seoHead` for localized `<head>` data.
 - **Keyboard** – `onShortcuts` that ignores typing in inputs and IME composition.
+- **PWA updates** – `registerServiceWorker` registers the service worker and reports a new version waiting to take over; `apply()` switches to it and reloads. The service worker must wait for a `{ type: "SKIP_WAITING" }` message instead of calling `skipWaiting` on install, and its content must change with each deploy.
 
 ## License
 

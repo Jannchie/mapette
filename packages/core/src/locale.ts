@@ -56,6 +56,10 @@ export interface KitText {
   places: (n: number) => string;
   more: (n: number) => string;
   zoomInHere: string;
+  /** PWA 更新提示（UpdateToast） */
+  updateReady: string;
+  reload: string;
+  later: string;
 }
 
 const fmt = (locale: Locale, n: number) => n.toLocaleString(locale);
@@ -80,6 +84,9 @@ export const KIT_TEXT: Record<Locale, KitText> = {
     places: (n) => `${fmt("zh-Hans", n)} 个地点`,
     more: (n) => `另有 ${fmt("zh-Hans", n)} 个`,
     zoomInHere: "放大查看",
+    updateReady: "有新版本可用",
+    reload: "刷新",
+    later: "稍后",
   },
   "zh-Hant": {
     locate: "定位",
@@ -100,6 +107,9 @@ export const KIT_TEXT: Record<Locale, KitText> = {
     places: (n) => `${fmt("zh-Hant", n)} 個地點`,
     more: (n) => `另有 ${fmt("zh-Hant", n)} 個`,
     zoomInHere: "放大查看",
+    updateReady: "有新版本可用",
+    reload: "重新整理",
+    later: "稍後",
   },
   ja: {
     locate: "現在地",
@@ -120,6 +130,9 @@ export const KIT_TEXT: Record<Locale, KitText> = {
     places: (n) => `${fmt("ja", n)} か所`,
     more: (n) => `ほか ${fmt("ja", n)} か所`,
     zoomInHere: "拡大して見る",
+    updateReady: "新しいバージョンがあります",
+    reload: "更新",
+    later: "あとで",
   },
   en: {
     locate: "My location",
@@ -140,6 +153,9 @@ export const KIT_TEXT: Record<Locale, KitText> = {
     places: (n) => `${fmt("en", n)} places`,
     more: (n) => `${fmt("en", n)} more`,
     zoomInHere: "Zoom in",
+    updateReady: "A new version is available",
+    reload: "Reload",
+    later: "Later",
   },
 };
 

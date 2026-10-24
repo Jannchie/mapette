@@ -828,3 +828,69 @@ img.mapette-img-failed {
     color: var(--mapette-accent);
   }
 }
+
+/* ---- PWA 更新提示（UpdateToast）：顶部居中的一条胶囊 ---- */
+.mapette-toast {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 12px);
+  left: 50%;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100vw - 24px);
+  padding: 5px 5px 5px 14px;
+  font-size: 13px;
+  color: var(--mapette-fg);
+  background: var(--mapette-bg);
+  border-radius: 99px;
+  box-shadow: var(--mapette-shadow);
+  backdrop-filter: var(--mapette-glass);
+  transform: translateX(-50%);
+}
+.mapette-toast-icon {
+  flex: none;
+  color: var(--mapette-accent);
+}
+.mapette-toast-msg {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.mapette-toast button {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  border: 0;
+  border-radius: 99px;
+  font: inherit;
+  cursor: pointer;
+}
+.mapette-toast-primary {
+  padding: 0 14px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--mapette-accent);
+}
+.mapette-toast-close {
+  width: 30px;
+  color: var(--mapette-muted);
+  background: transparent;
+}
+@media (hover: hover) {
+  .mapette-toast-close:hover {
+    color: var(--mapette-fg);
+    background: var(--mapette-hover);
+  }
+}
+.mapette-toast-enter-active,
+.mapette-toast-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.mapette-toast-enter-from,
+.mapette-toast-leave-to {
+  opacity: 0;
+  transform: translate(-50%, -6px);
+}
