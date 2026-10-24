@@ -1,13 +1,12 @@
 {
   "name": "@mapette/vue",
   "version": "0.1.0",
-  "description": "Vue bindings for @mapette/core.",
+  "description": "Vue 3 components for @mapette/core: MapView, MapExplorer (full-screen map with side panel / bottom sheet), MapFooter, photo pins and popovers.",
   "type": "module",
   "license": "MIT",
   "author": "Jianqi Pan <jannchie@gmail.com>",
   "files": [
-    "src",
-    "dist"
+    "src"
   ],
   "exports": {
     ".": {
@@ -29,5 +28,19 @@
   "peerDependencies": {
     "maplibre-gl": "^5.9.0",
     "vue": "^3.5.0"
+  },
+  "keywords": [
+    "map",
+    "maplibre",
+    "maplibre-gl",
+    "vue",
+    "photo",
+    "pilgrimage",
+    "cluster",
+    "bottom-sheet",
+    "popover"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

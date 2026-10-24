@@ -1,7 +1,7 @@
 {
   "name": "@mapette/core",
   "version": "0.1.0",
-  "description": "Framework-agnostic map kit for place-and-photo sites: an Apple Maps–like MapLibre basemap, heatmap-to-points overlays, photo pins, location markers and a side panel / bottom sheet.",
+  "description": "Framework-agnostic map UI on MapLibre for place-and-photo sites: Apple Maps–like basemap, cluster bubbles, photo pins, popovers, a side panel / bottom sheet, theme and locale helpers.",
   "type": "module",
   "license": "MIT",
   "author": "Jianqi Pan <jannchie@gmail.com>",
@@ -33,6 +33,20 @@
     }
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.8.0"
+    "@floating-ui/dom": "^1.8.0",
+    "@types/geojson": "^7946.0.16"
+  },
+  "keywords": [
+    "map",
+    "maplibre",
+    "maplibre-gl",
+    "photo",
+    "pilgrimage",
+    "cluster",
+    "bottom-sheet",
+    "popover"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }
