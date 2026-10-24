@@ -47,6 +47,6 @@ jobs:
           pnpm -C packages/core pack --pack-destination ../../dist-pack
           pnpm -C packages/vue pack --pack-destination ../../dist-pack
 
-      # core 先发：vue 依赖它
-      - run: npm publish dist-pack/mapette-core-*.tgz --access public
-      - run: npm publish dist-pack/mapette-vue-*.tgz --access public
+      # core 先发：vue 依赖它。路径要以 ./ 开头，否则 npm 会把 dist-pack/xxx 当成 GitHub 仓库简写
+      - run: npm publish ./dist-pack/mapette-core-*.tgz --access public
+      - run: npm publish ./dist-pack/mapette-vue-*.tgz --access public
