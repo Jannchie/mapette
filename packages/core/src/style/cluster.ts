@@ -1,6 +1,6 @@
 // 聚合气泡：缩小时相邻的点合成一个带数量的气泡，放大时逐级拆开，拆到底就是单个的点（pointLayer）。
 // 合并、拆开由 maplibre 在 worker 里按缩放级别完成；点击展开见 controls 里的 ClusterExpander。
-import type { DataDrivenPropertyValueSpecification, ExpressionSpecification, FilterSpecification, GeoJSONSourceSpecification, LayerSpecification } from "maplibre-gl";
+import type { DataDrivenPropertyValueSpecification, ExpressionSpecification, FilterSpecification, GeoJSONSource, GeoJSONSourceSpecification, LayerSpecification, Map as MaplibreMap } from "maplibre-gl";
 import { FONT_BOLD } from "./basemap";
 import type { Palette } from "./palette";
 
@@ -9,8 +9,11 @@ export const UNCLUSTERED: FilterSpecification = ["!", ["has", "point_count"]];
 /** 只要聚合气泡 */
 export const CLUSTERED: FilterSpecification = ["has", "point_count"];
 
+/** 默认合并半径（屏幕像素）：气泡之间大约隔一个气泡的距离，不会密密麻麻 */
+export const CLUSTER_RADIUS = 72;
+
 export interface ClusterOptions {
-  /** 合并半径（屏幕像素），越大气泡越少 */
+  /** 合并半径（屏幕像素），越大气泡越少、每个气泡里的点越多 */
   radius?: number;
   /** 这一级以上不再聚合，全部显示成单个点 */
   maxZoom?: number;
@@ -24,11 +27,21 @@ export function clusterSource(data: GeoJSONSourceSpecification["data"], o: Clust
     type: "geojson",
     data,
     cluster: true,
-    clusterRadius: o.radius ?? 48,
+    clusterRadius: o.radius ?? CLUSTER_RADIUS,
     clusterMaxZoom: o.maxZoom ?? 13,
     ...(o.properties ? { clusterProperties: o.properties } : {}),
     ...extra,
   };
+}
+
+/** 运行时调整聚合（半径、上限），数据不重新加载；例如给用户一个「气泡密度」的设置 */
+export function setClusterOptions(map: MaplibreMap, source: string, o: Pick<ClusterOptions, "radius" | "maxZoom">) {
+  // maplibre 的 setClusterOptions 没给 cluster 时会把聚合关掉，所以总是带上 cluster: true
+  (map.getSource(source) as GeoJSONSource | undefined)?.setClusterOptions({
+    cluster: true,
+    ...(o.radius !== undefined ? { clusterRadius: o.radius } : {}),
+    ...(o.maxZoom !== undefined ? { clusterMaxZoom: o.maxZoom } : {}),
+  });
 }
 
 /** 数量 → 显示文字：1234 → 1.2k，12345 → 12k */
