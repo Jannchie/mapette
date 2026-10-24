@@ -558,22 +558,233 @@ img.mapette-img-failed {
   background: var(--mapette-hover);
 }
 .mapette-cluster-pop-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 6px 8px 8px 12px;
+  padding: 6px 12px 8px;
   font-size: 12px;
   color: var(--mapette-muted);
   border-top: 1px solid var(--mapette-line);
 }
-.mapette-cluster-pop-foot button {
-  margin-left: auto;
-  padding: 4px 10px;
+
+/* ---- 面板底部（MapFooter）：署名与来源、快捷键说明、外观、语言 ---- */
+.mapette-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 8px 16px;
+  font-size: 11px;
+  color: var(--mapette-muted);
+}
+.mapette-credits-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 4px 6px;
+  margin-left: -6px;
   font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.mapette-credits-btn span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mapette-credits-btn:hover,
+.mapette-credits-btn:has(+ .mapette-credits-pop:popover-open) {
   color: var(--mapette-fg);
   background: var(--mapette-hover);
+}
+.mapette-foot-btn {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  color: inherit;
+  background: none;
   border: 0;
-  border-radius: 999px;
+  border-radius: 6px;
   cursor: pointer;
+}
+.mapette-foot-btn:hover {
+  color: var(--mapette-fg);
+  background: var(--mapette-hover);
+}
+.mapette-credits-pop {
+  /* 覆盖 popover 默认的居中；位置在打开时按署名按钮算好（MapFooter 的 onCreditsToggle） */
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  min-width: 160px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--mapette-muted);
+  background: var(--mapette-bg);
+  border: 0;
+  border-radius: 12px;
+  box-shadow: var(--mapette-shadow);
+  backdrop-filter: var(--mapette-glass);
+}
+.mapette-credits-pop:popover-open {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.mapette-credits-pop hr {
+  align-self: stretch;
+  margin: 4px 0;
+  border: 0;
+  border-top: 1px solid var(--mapette-line);
+}
+.mapette-credits-pop a,
+.mapette-credits-pop button,
+.mapette-credits-pop label {
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-decoration: none;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.mapette-credits-pop a:hover,
+.mapette-credits-pop button:hover,
+.mapette-credits-pop label:hover {
+  color: var(--mapette-fg);
+}
+.mapette-credits-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.mapette-credits-pop input[type="checkbox"] {
+  margin: 0;
+  accent-color: var(--mapette-accent);
+}
+/* 触屏设备没有键盘，不显示快捷键入口 */
+@media (hover: none) {
+  .mapette-kb-btn {
+    display: none;
+  }
+}
+.mapette-shortcuts-pop {
+  padding: 16px 20px;
+  color: var(--mapette-fg);
+  background: var(--mapette-bg);
+  border: 0;
+  border-radius: 16px;
+  box-shadow: var(--mapette-shadow);
+  backdrop-filter: var(--mapette-glass);
+}
+.mapette-shortcuts-pop::backdrop {
+  background: rgb(0 0 0 / 0.15);
+}
+.mapette-shortcuts-pop h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+}
+.mapette-shortcuts-pop dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 16px;
+  align-items: center;
+  margin: 0;
+  font-size: 13px;
+}
+.mapette-shortcuts-pop dt {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+.mapette-shortcuts-pop dd {
+  margin: 0;
+  color: var(--mapette-muted);
+}
+.mapette-shortcuts-pop kbd {
+  min-width: 22px;
+  padding: 2px 6px;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+  background: var(--mapette-hover);
+  border-radius: 5px;
+  box-shadow: inset 0 -1px 0 var(--mapette-line);
+}
+.mapette-lang {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.mapette-lang:hover {
+  color: var(--mapette-fg);
+  background: var(--mapette-hover);
+}
+.mapette-lang select {
+  display: inline-flex;
+  align-items: center;
+  font: inherit;
+  line-height: 1;
+  color: inherit;
+  background: none;
+  border: 0;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+}
+/* 触屏设备：下拉框字号小于 16px 时 iOS 会自动放大页面 */
+@media (hover: none) and (pointer: coarse) {
+  .mapette-lang select {
+    font-size: 16px;
+  }
+}
+/* 渐进增强：可定制 select（appearance: base-select）。不支持的浏览器用系统下拉，手机上即系统选择器 */
+@supports (appearance: base-select) {
+  .mapette-lang select,
+  .mapette-lang select::picker(select) {
+    appearance: base-select;
+  }
+  .mapette-lang select {
+    padding: 0;
+  }
+  .mapette-lang select::picker-icon {
+    display: none;
+  }
+  .mapette-lang select::picker(select) {
+    min-width: 132px;
+    padding: 4px;
+    margin-block: 8px;
+    color: var(--mapette-fg);
+    background: var(--mapette-bg);
+    border: 0;
+    border-radius: 12px;
+    box-shadow: var(--mapette-shadow);
+    backdrop-filter: var(--mapette-glass);
+  }
+  .mapette-lang option {
+    padding: 7px 10px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+  .mapette-lang option:hover,
+  .mapette-lang option:focus-visible {
+    background: var(--mapette-hover);
+  }
+  .mapette-lang option:checked {
+    font-weight: 600;
+  }
+  .mapette-lang option::checkmark {
+    order: 1;
+    margin-left: auto;
+    color: var(--mapette-accent);
+  }
 }

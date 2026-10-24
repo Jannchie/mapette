@@ -3,7 +3,7 @@
 // 里面的控件、标记通过 useMap() 拿到控制器。
 import { applyTheme, createMap, type Interaction, type Locale, type MapController, type Preset, type StyleInput, type Theme } from "@mapette/core";
 import type { MapOptions, PaddingOptions } from "maplibre-gl";
-import { onMounted, onUnmounted, provide, ref, shallowRef, watch } from "vue";
+import { computed, onMounted, onUnmounted, provide, ref, shallowRef, watch } from "vue";
 import { ScaleBar } from "./components";
 import { MAP_CONTEXT } from "./context";
 
@@ -56,7 +56,7 @@ const setTheme = (t: Theme | undefined) => {
   undoTheme = t ? applyTheme(root.value!, t) : null;
 };
 const controller = shallowRef<MapController | null>(null);
-provide(MAP_CONTEXT, { controller });
+provide(MAP_CONTEXT, { controller, locale: computed(() => props.locale) });
 defineExpose({ controller });
 
 let unmounted = false;

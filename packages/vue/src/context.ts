@@ -1,10 +1,12 @@
 // <MapView> 把地图控制器提供给里面的组件（控件、比例尺、标记）
-import type { MapController } from "@mapette/core";
-import { inject, onBeforeUnmount, shallowRef, watch, type InjectionKey, type ShallowRef } from "vue";
+import type { Locale, MapController } from "@mapette/core";
+import { inject, onBeforeUnmount, shallowRef, watch, type InjectionKey, type Ref, type ShallowRef } from "vue";
 
 export interface MapContext {
   /** 地图控制器；地图异步创建，创建完成前为 null */
   controller: ShallowRef<MapController | null>;
+  /** 界面语言（MapView 的 locale），里面的控件、卡片按它显示自带的文字 */
+  locale: Ref<Locale | undefined>;
 }
 
 // 用全局注册的 Symbol：打包工具偶尔会把本包加载成两份模块实例（例如 SSR 的依赖预构建与源码各一份），

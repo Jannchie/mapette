@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // 点击聚合气泡：不放大，在气泡上弹出菜单（没有箭头，可以盖住气泡，优先完整显示），列出里面的点。
 // 内容由调用者用作用域插槽决定（#default="{ features, count, close, zoomIn }"）；不写插槽时用默认渲染：
-// 「N 个地点」加一个名称列表（名称取 label），点一项触发 pick。放大展开只在用户点「放大查看」时发生。
-import { clusterLeaves } from "@mapette/core";
+// 「N 个地点」加一个名称列表（名称取 label），点一项触发 pick。地图不会因为点了气泡而缩放。
+import { clusterLeaves, kitText } from "@mapette/core";
 import type { Feature, Point } from "geojson";
 import type { MapLayerMouseEvent } from "maplibre-gl";
 import { computed, onBeforeUnmount, ref, shallowRef, watch } from "vue";
@@ -14,29 +14,26 @@ const props = withDefaults(defineProps<{
   source: string;
   /** 气泡图层（clusterLayers 生成的 id 与 id-count） */
   layers?: string[];
-  /** 最多取出多少个点 */
+  /** 最多取出多少个点；默认全部（在浏览器的聚合索引里取，不走网络，几千个也很快） */
   limit?: number;
   /** 默认渲染里每一项的名称 */
   label?: (f: Feature) => string;
   labels?: { count?: (n: number) => string; zoomIn?: string; close?: string; more?: (n: number) => string };
 }>(), {
   layers: () => ["cluster", "cluster-count"],
-  limit: 30,
+  limit: undefined,
   label: (f: Feature) => String(f.properties?.name ?? f.properties?.title ?? f.id ?? ""),
   labels: () => ({}),
 });
 
 const emit = defineEmits<{ pick: [feature: Feature] }>();
 
-const text = computed(() => ({
-  count: (n: number) => `${n.toLocaleString()} places`,
-  zoomIn: "Zoom in",
-  close: "Close",
-  more: (n: number) => `+${n.toLocaleString()} more`,
-  ...props.labels,
-}));
-
-const { controller } = useMap();
+const { controller, locale } = useMap();
+// 自带的文字按地图的语言；labels 里给了的项覆盖它
+const text = computed(() => {
+  const k = kitText(locale.value);
+  return { count: k.places, zoomIn: k.zoomInHere, close: k.close, more: k.more, ...props.labels };
+});
 const at = ref<[number, number] | null>(null);
 const cluster = shallowRef<{ id: number; count: number; features: Feature[] } | null>(null);
 let seq = 0;
@@ -47,7 +44,7 @@ async function onClick(e: MapLayerMouseEvent) {
   if (!f || id == null || !controller.value) return;
   const n = ++seq;
   const lngLat = (f.geometry as Point).coordinates as [number, number];
-  const features = await clusterLeaves(controller.value.map, props.source, id, props.limit);
+  const features = await clusterLeaves(controller.value.map, props.source, id, props.limit ?? Number(f.properties.point_count));
   if (n !== seq) return;
   cluster.value = { id, count: Number(f.properties.point_count), features };
   at.value = lngLat;
@@ -120,10 +117,7 @@ defineExpose({ close });
               <button type="button" @click="pick(f)">{{ label(f) }}</button>
             </li>
           </ul>
-          <div class="mapette-cluster-pop-foot">
-            <span v-if="cluster.count > cluster.features.length">{{ text.more(cluster.count - cluster.features.length) }}</span>
-            <button type="button" @click="zoomIn">{{ text.zoomIn }}</button>
-          </div>
+          <div v-if="cluster.count > cluster.features.length" class="mapette-cluster-pop-foot">{{ text.more(cluster.count - cluster.features.length) }}</div>
         </div>
       </slot>
     </template>

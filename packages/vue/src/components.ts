@@ -1,8 +1,8 @@
 // 放在 <MapView> 里的控件与标记：都只是把 @mapette/core 的对象接到组件生命周期上，不渲染任何 DOM。
-import { ClusterExpander, LocationMarker as CoreLocationMarker, MapButtons, PhotoPins as CorePhotoPins, ScaleBar as CoreScaleBar, type MapButtonsOptions, type PhotoPinsOptions } from "@mapette/core";
+import { ClusterExpander, kitText, LocationMarker as CoreLocationMarker, MapButtons, PhotoPins as CorePhotoPins, ScaleBar as CoreScaleBar, type MapButtonsOptions, type PhotoPinsOptions } from "@mapette/core";
 import type { MapGeoJSONFeature } from "maplibre-gl";
 import { defineComponent, watch, type PropType } from "vue";
-import { useMapObject } from "./context";
+import { useMap, useMapObject } from "./context";
 
 export const ScaleBar = defineComponent({
   name: "ScaleBar",
@@ -21,7 +21,9 @@ export const MapControls = defineComponent({
     labels: Object as PropType<MapButtonsOptions["labels"]>,
   },
   setup(props, { expose }) {
-    const buttons = useMapObject((ctrl) => new MapButtons(ctrl, { locate: props.locate, zoom: props.zoom, labels: props.labels }));
+    const { locale } = useMap();
+    // 不给 labels 就按地图的语言用自带的文字
+    const buttons = useMapObject((ctrl) => new MapButtons(ctrl, { locate: props.locate, zoom: props.zoom, labels: props.labels ?? kitText(locale.value) }));
     expose({ locate: () => buttons.value?.locate() });
     return () => null;
   },
