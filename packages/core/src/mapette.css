@@ -507,6 +507,9 @@ img.mapette-img-failed {
   background: inherit;
   transform: rotate(45deg);
 }
+.mapette-popover-menu .mapette-popover-arrow {
+  display: none;
+}
 .mapette-popover[data-placement^="top"] .mapette-popover-arrow {
   bottom: -6px;
 }
@@ -530,14 +533,11 @@ img.mapette-img-failed {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
+/* 列表不自己滚动：菜单优先完整显示，真的比可见区域还高时由外层的 .mapette-popover-body 滚动 */
 .mapette-cluster-pop ul {
-  max-height: 220px;
   margin: 0;
   padding: 0 4px;
-  overflow-y: auto;
   list-style: none;
-  scrollbar-width: thin;
-  scrollbar-color: var(--mapette-scroll-thumb) transparent;
 }
 .mapette-cluster-pop li button {
   display: block;

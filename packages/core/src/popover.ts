@@ -1,5 +1,7 @@
 // 地图上的弹出卡片：指向一个位置，始终留在地图的可见区域（避开侧栏 / 抽屉）里。
 // 定位交给 Floating UI：上方放不下就翻到下方，左右放不下就平移；位置被拖出可见区域时隐藏卡片。
+// 两种形态：默认是带箭头、指着点的卡片；menu 是菜单——从点击处展开、没有箭头，
+// 放不下时可以整个滑过去盖住那个点，优先完整显示、不出现滚动。
 // 卡片元素由使用方提供（框架渲染的内容），这里只负责摆放、箭头和跟随地图移动。
 import { arrow, computePosition, flip, hide, offset, shift, size, type Placement, type Rect, type VirtualElement } from "@floating-ui/dom";
 import type { MapController } from "./map";
@@ -11,6 +13,8 @@ export interface PopoverOptions {
   offset?: number;
   /** 卡片与可见区域边缘至少留出的距离（px） */
   padding?: number;
+  /** 菜单形态：没有箭头，两个方向都可以平移（可以盖住点），高度只受整个可见区域限制 */
+  menu?: boolean;
 }
 
 export class MapPopover {
@@ -25,7 +29,9 @@ export class MapPopover {
   /** el：卡片（会被设为 absolute，定位相对于它的 offsetParent）；arrowEl：可选的小箭头 */
   constructor(private ctrl: MapController, private el: HTMLElement, lngLat: [number, number], private arrowEl?: HTMLElement | null, options: PopoverOptions = {}) {
     this.lngLat = lngLat;
-    this.o = { placement: "top", offset: 14, padding: 12, ...options };
+    this.o = options.menu
+      ? { placement: "bottom-start", offset: 4, padding: 12, menu: true, ...options }
+      : { placement: "top", offset: 14, padding: 12, menu: false, ...options };
     el.classList.add("mapette-popover");
     el.style.position = "absolute";
     el.style.left = "0";
@@ -67,19 +73,25 @@ export class MapPopover {
       middleware: [
         offset(this.o.offset),
         flip({ rootBoundary: area, padding: this.o.padding }),
-        shift({ rootBoundary: area, padding: this.o.padding }),
-        // 比可见区域还高时限制高度，内容在卡片里滚动（--mapette-popover-max-height，见 mapette.css）
+        // 菜单：垂直于展开方向的轴也平移，放不下就滑过去盖住点，换取完整显示
+        shift({ rootBoundary: area, padding: this.o.padding, crossAxis: this.o.menu }),
+        // 太高时限制高度，内容在卡片里滚动（--mapette-popover-max-height，见 mapette.css）。
+        // 卡片：受点那一侧剩余空间限制；菜单：可以盖住点，只受整个可见区域限制
         size({
           rootBoundary: area,
           padding: this.o.padding,
-          apply: ({ availableHeight }) => this.el.style.setProperty("--mapette-popover-max-height", `${Math.max(120, Math.floor(availableHeight))}px`),
+          apply: ({ availableHeight }) => {
+            const h = this.o.menu ? area.height - 2 * this.o.padding : availableHeight;
+            this.el.style.setProperty("--mapette-popover-max-height", `${Math.max(120, Math.floor(h))}px`);
+          },
         }),
-        ...(this.arrowEl ? [arrow({ element: this.arrowEl, padding: 12 })] : []),
+        ...(this.arrowEl && !this.o.menu ? [arrow({ element: this.arrowEl, padding: 12 })] : []),
         hide({ rootBoundary: area }),
       ],
     });
     this.el.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
     this.el.dataset.placement = placement;
+    this.el.classList.toggle("mapette-popover-menu", this.o.menu);
     // 点被拖出可见区域（或藏到面板后面）时，卡片跟着隐藏，不贴在边上
     this.el.style.visibility = middlewareData.hide?.referenceHidden ? "hidden" : "";
     const a = middlewareData.arrow;

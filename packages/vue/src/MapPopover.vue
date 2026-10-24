@@ -9,8 +9,10 @@ const props = withDefaults(defineProps<{
   /** 指向的位置；null 时不显示 */
   lngLat: [number, number] | null;
   placement?: PopoverOptions["placement"];
+  /** 菜单形态：从点击处展开、没有箭头，可以盖住点，优先完整显示 */
+  menu?: boolean;
   closeLabel?: string;
-}>(), { placement: "top", closeLabel: "Close" });
+}>(), { placement: undefined, menu: false, closeLabel: "Close" });
 
 const emit = defineEmits<{ close: [] }>();
 
@@ -28,7 +30,7 @@ function sync() {
     return;
   }
   if (popover.value) popover.value.setLngLat(p);
-  else popover.value = new CorePopover(ctrl, el.value, p, arrowEl.value, { placement: props.placement });
+  else popover.value = new CorePopover(ctrl, el.value, p, arrowEl.value, { menu: props.menu, ...(props.placement ? { placement: props.placement } : {}) });
 }
 
 // 卡片在 lngLat 有值时才渲染，等 DOM 出来再交给 core

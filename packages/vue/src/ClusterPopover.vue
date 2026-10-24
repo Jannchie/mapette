@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// 点击聚合气泡：不放大，在气泡上弹出卡片，列出里面的点。
+// 点击聚合气泡：不放大，在气泡上弹出菜单（没有箭头，可以盖住气泡，优先完整显示），列出里面的点。
 // 内容由调用者用作用域插槽决定（#default="{ features, count, close, zoomIn }"）；不写插槽时用默认渲染：
 // 「N 个地点」加一个名称列表（名称取 label），点一项触发 pick。放大展开只在用户点「放大查看」时发生。
 import { clusterLeaves } from "@mapette/core";
@@ -51,6 +51,7 @@ async function onClick(e: MapLayerMouseEvent) {
   if (n !== seq) return;
   cluster.value = { id, count: Number(f.properties.point_count), features };
   at.value = lngLat;
+  zoomAtOpen = controller.value.map.getZoom();
 }
 function close() {
   seq++;
@@ -72,6 +73,15 @@ function pick(f: Feature) {
   close();
 }
 
+// 缩放真的变了（气泡可能已经重新合并或拆开，菜单指向的那个不存在了）才关闭。
+// 只是平移不关：球面投影下平移也会让缩放有细微变化、触发 zoomend，所以和打开菜单时的缩放比较变化量
+// （滚轮缩放是一连串小手势，逐次比较每次都不到阈值）
+let zoomAtOpen = 0;
+const onZoomEnd = () => {
+  const z = controller.value?.map.getZoom() ?? 0;
+  if (at.value && Math.abs(z - zoomAtOpen) >= 0.5) close();
+};
+
 const enter = () => controller.value && (controller.value.map.getCanvas().style.cursor = "pointer");
 const leave = () => controller.value && (controller.value.map.getCanvas().style.cursor = "");
 watch(controller, (ctrl, prev) => {
@@ -83,8 +93,8 @@ watch(controller, (ctrl, prev) => {
     ctrl?.map.on("mouseenter", l, enter);
     ctrl?.map.on("mouseleave", l, leave);
   }
-  // 缩放后气泡会重新合并或拆开，卡片指向的气泡可能已经不存在了
-  ctrl?.map.on("zoomend", close);
+  prev?.map.off("zoomend", onZoomEnd);
+  ctrl?.map.on("zoomend", onZoomEnd);
 }, { immediate: true });
 onBeforeUnmount(() => {
   const m = controller.value?.map;
@@ -93,14 +103,14 @@ onBeforeUnmount(() => {
     m?.off("mouseenter", l, enter);
     m?.off("mouseleave", l, leave);
   }
-  m?.off("zoomend", close);
+  m?.off("zoomend", onZoomEnd);
 });
 
 defineExpose({ close });
 </script>
 
 <template>
-  <MapPopover :lng-lat="at" :close-label="text.close" @close="close">
+  <MapPopover :lng-lat="at" menu :close-label="text.close" @close="close">
     <template v-if="cluster">
       <slot :features="cluster.features" :count="cluster.count" :close="close" :zoom-in="zoomIn">
         <div class="mapette-cluster-pop">
