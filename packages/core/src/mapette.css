@@ -490,6 +490,9 @@ img.mapette-img-failed {
 /* 指向位置的小尖角：在卡片朝向点的那一边 */
 .mapette-popover-arrow {
   position: absolute;
+  /* 旋转的方块有一半压在卡片里：放到内容下层（卡片有 z-index，自成层叠上下文，负值仍在卡片背景之上），
+     露在外面的一半是尖角，里面的一半被截图之类的内容盖住，不会多出一个三角 */
+  z-index: -1;
   width: 12px;
   height: 12px;
   background: inherit;
