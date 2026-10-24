@@ -1,0 +1,52 @@
+# 发布到 npm：推送 v* 标签（如 v0.1.1）时触发，用 npm Trusted Publishing（OIDC），不需要 NPM_TOKEN。
+# 前提：npmjs.com 上 @mapette/core 与 @mapette/vue 的 Settings → Trusted Publisher 绑定了本仓库与本工作流（release.yml）。
+# 标签版本要与两个包的 version 一致；发布时自动附带来源证明（provenance）。
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+  id-token: write # OIDC：npm 用它确认发布来自本仓库的这个工作流
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+
+      # Trusted Publishing 需要 npm 11.5.1 以上
+      - run: npm install -g npm@latest
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Check tag matches package versions
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          for p in packages/core packages/vue; do
+            v=$(node -p "require('./$p/package.json').version")
+            if [ "$v" != "$tag" ]; then echo "$p is $v, tag is $tag"; exit 1; fi
+          done
+
+      - run: pnpm build
+
+      # 先用 pnpm pack 打包（把 workspace:^ 换成真实版本号），再用 npm 发布 tgz：npm 负责 OIDC 认证与 provenance
+      - name: Pack
+        run: |
+          mkdir -p dist-pack
+          pnpm -C packages/core pack --pack-destination ../../dist-pack
+          pnpm -C packages/vue pack --pack-destination ../../dist-pack
+
+      # core 先发：vue 依赖它
+      - run: npm publish dist-pack/mapette-core-*.tgz --access public
+      - run: npm publish dist-pack/mapette-vue-*.tgz --access public
