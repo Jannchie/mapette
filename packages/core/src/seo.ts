@@ -19,7 +19,14 @@ export interface SeoOptions {
   noindex?: boolean;
   /** 额外的 meta / link（例如 PWA 清单、给 LLM 读的 Markdown 版本） */
   meta?: Record<string, string>[];
-  link?: Record<string, string>[];
+  link?: SeoLink[];
+}
+
+/** link 必须有 rel 与 href（Void 的 HeadDescriptor 等也是这样要求的） */
+export interface SeoLink {
+  rel: string;
+  href: string;
+  [attr: string]: string;
 }
 
 export function seoHead(o: SeoOptions) {

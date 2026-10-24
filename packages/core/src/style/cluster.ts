@@ -5,9 +5,9 @@ import { FONT_BOLD } from "./basemap";
 import type { Palette } from "./palette";
 
 /** 只要没被聚合的单个点（给 pointLayer 之类的 filter 用） */
-export const UNCLUSTERED: FilterSpecification = ["!", ["has", "point_count"]];
+export const UNCLUSTERED: ExpressionSpecification = ["!", ["has", "point_count"]];
 /** 只要聚合气泡 */
-export const CLUSTERED: FilterSpecification = ["has", "point_count"];
+export const CLUSTERED: ExpressionSpecification = ["has", "point_count"];
 
 /** 默认合并半径（屏幕像素）：气泡之间大约隔一个气泡的距离，不会密密麻麻 */
 export const CLUSTER_RADIUS = 72;
