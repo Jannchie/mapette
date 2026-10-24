@@ -1,6 +1,7 @@
 <script setup lang="ts">
-// 小地图用法：照片详情侧栏里的「拍摄地点」卡片（Liora 那种），不需要面板、热力图和照片标记
-import type { StyleContext } from "@mapette/core";
+// 小地图用法：照片详情侧栏里的「拍摄地点」卡片（Liora 那种），不需要面板、热力图和照片标记；
+// 下面是内置主题一览，每套主题的日间、夜间并排
+import { themes, type ThemeName } from "@mapette/core";
 import { LocationMarker, MapControls, MapView } from "@mapette/vue";
 import { ref } from "vue";
 
@@ -19,9 +20,12 @@ function toggleDark() {
   document.documentElement.classList.toggle("dark", dark.value);
 }
 
-// 别家的底图也可以：按亮暗给样式 URL
-const carto = ({ dark }: StyleContext) =>
-  dark ? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json" : "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
+const THEMES: { name: ThemeName; note: string }[] = [
+  { name: "neutral", note: "默认，中性灰" },
+  { name: "cool", note: "陆地、建筑与小路偏蓝，接近 Apple 地图" },
+  { name: "warm", note: "纸张一样的米色" },
+  { name: "mono", note: "灰阶，照片与标记是主角" },
+];
 </script>
 
 <template>
@@ -55,17 +59,22 @@ const carto = ({ dark }: StyleContext) =>
           </MapView>
         </div>
       </section>
-
-      <section class="card">
-        <p class="caption">compact · CARTO 底图（随亮暗切换）</p>
-        <p class="coords">{{ place.name }}</p>
-        <div class="mini">
-          <MapView preset="compact" :map-style="carto" :center="place.lngLat" :zoom="13">
-            <LocationMarker :lng-lat="place.lngLat" pulse />
-          </MapView>
-        </div>
-      </section>
     </div>
+
+    <h2>主题</h2>
+    <section v-for="th in THEMES" :key="th.name" class="theme">
+      <p class="theme-name"><code>themes.{{ th.name }}</code><span class="caption">{{ th.note }}</span></p>
+      <div class="pair">
+        <figure v-for="night in [false, true]" :key="String(night)">
+          <div class="mini">
+            <MapView preset="compact" :theme="themes[th.name]" :dark="night" :center="place.lngLat" :zoom="15" locale="en">
+              <LocationMarker :lng-lat="place.lngLat" />
+            </MapView>
+          </div>
+          <figcaption class="caption">{{ night ? "夜间" : "日间" }}</figcaption>
+        </figure>
+      </div>
+    </section>
   </main>
 </template>
 
@@ -136,6 +145,31 @@ h1 {
   margin: 4px 0 12px;
   font-size: 13px;
   font-variant-numeric: tabular-nums;
+}
+h2 {
+  margin: 32px 0 8px;
+  font-size: 15px;
+}
+.theme {
+  margin-top: 16px;
+}
+.theme-name {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+.pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+figure {
+  margin: 0;
+}
+figcaption {
+  margin-top: 6px;
 }
 .mini {
   height: 200px;
