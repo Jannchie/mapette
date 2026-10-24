@@ -48,8 +48,25 @@ export function heatmapLayer({ id = "heat", source, palette: c, filter, fade = H
   };
 }
 
-/** 放大后接替热力图的可点击圆点（白描边） */
-export function pointLayer({ id = "point", source, palette: c, filter, fade = HEAT_FADE, color }: LayerOptions & { color?: string | ExpressionSpecification }): LayerSpecification {
+/**
+ * 可点击的圆点（白描边）。配热力图时在 fade 区间淡入接替它；配聚合气泡时给 fade: false（任何缩放都显示），
+ * 并在 filter 里加上 UNCLUSTERED，只画没被聚合的点
+ */
+export function pointLayer({ id = "point", source, palette: c, filter, fade = HEAT_FADE, color }: Omit<LayerOptions, "fade"> & { fade?: [number, number] | false; color?: string | ExpressionSpecification }): LayerSpecification {
+  if (fade === false) {
+    return {
+      id,
+      type: "circle",
+      source,
+      ...(filter ? { filter } : {}),
+      paint: {
+        "circle-color": color ?? c.accent,
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 4, 12, 5, 16, 7, 18, 9],
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 4, 1.5, 16, 2],
+      },
+    };
+  }
   const [fadeFrom, fadeTo] = fade;
   return {
     id,

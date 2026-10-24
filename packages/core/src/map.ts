@@ -72,6 +72,11 @@ export interface MapController {
   setPadding(padding: PaddingOptions): void;
   /** 重新读配色、重新生成样式（例如改了主题颜色之后） */
   refresh(): void;
+  /**
+   * 让一个位置出现在可见区域（避开面板）里：已经看得到就不动，看不到就平移过去。从不改变缩放——
+   * 选中一个点之后自动放大，对用户是负担（看不清周围、还得自己缩回去）
+   */
+  reveal(lngLat: [number, number], margin?: number): void;
   /** 实际生效的留白：至少给地图留出 200px 见方 */
   getPadding(): PaddingOptions;
   /** 每次样式加载完成（含换主题）时回调；返回取消函数 */
@@ -232,6 +237,14 @@ export async function createMap(o: MapetteOptions): Promise<MapController> {
     },
     refresh() {
       void restyle();
+    },
+    reveal(lngLat, margin = 48) {
+      const { x, y } = map.project(lngLat);
+      const q = usable();
+      const c = o.container;
+      const inside = x >= (q.left ?? 0) + margin && x <= c.clientWidth - (q.right ?? 0) - margin
+        && y >= (q.top ?? 0) + margin && y <= c.clientHeight - (q.bottom ?? 0) - margin;
+      if (!inside) map.easeTo({ center: lngLat, duration: 600 });
     },
     getPadding: usable,
     onStyleLoad(callback) {

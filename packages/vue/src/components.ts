@@ -1,5 +1,5 @@
 // 放在 <MapView> 里的控件与标记：都只是把 @mapette/core 的对象接到组件生命周期上，不渲染任何 DOM。
-import { LocationMarker as CoreLocationMarker, MapButtons, PhotoPins as CorePhotoPins, ScaleBar as CoreScaleBar, type MapButtonsOptions, type PhotoPinsOptions } from "@mapette/core";
+import { ClusterExpander, LocationMarker as CoreLocationMarker, MapButtons, PhotoPins as CorePhotoPins, ScaleBar as CoreScaleBar, type MapButtonsOptions, type PhotoPinsOptions } from "@mapette/core";
 import type { MapGeoJSONFeature } from "maplibre-gl";
 import { defineComponent, watch, type PropType } from "vue";
 import { useMapObject } from "./context";
@@ -71,6 +71,16 @@ export const PhotoPins = defineComponent({
     });
     watch(() => props.focus, (key) => pins.value?.setFocus(key));
     expose({ refresh: () => pins.value?.refresh() });
+    return () => null;
+  },
+});
+
+/** 点击聚合气泡放大展开；layers 是 clusterLayers 生成的气泡图层（默认 cluster 与 cluster-count） */
+export const ClusterExpand = defineComponent({
+  name: "ClusterExpand",
+  props: { layers: { type: Array as PropType<string[]>, default: () => ["cluster", "cluster-count"] } },
+  setup(props) {
+    useMapObject((ctrl) => new ClusterExpander(ctrl, props.layers));
     return () => null;
   },
 });

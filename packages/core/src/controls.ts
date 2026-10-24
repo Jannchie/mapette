@@ -1,6 +1,7 @@
 // 浮在地图上的控件：比例尺与定位、缩放按钮。直接挂在地图容器里（不进 maplibre 的四角容器），
 // 用 --mapette-pad-left / --mapette-pad-bottom 避开浮层面板。图标是内联 SVG，不依赖图标库。
-import type { GeolocateControl } from "maplibre-gl";
+import type { GeoJSONSource, GeolocateControl, MapLayerMouseEvent } from "maplibre-gl";
+import type { Point } from "geojson";
 import type { MapController } from "./map";
 
 const svg = (path: string) =>
@@ -91,5 +92,39 @@ export class MapButtons {
   remove() {
     if (this.geolocate && this.ctrl.map.hasControl(this.geolocate)) this.ctrl.map.removeControl(this.geolocate);
     this.el.remove();
+  }
+}
+
+/** 点击聚合气泡：放大到它拆开的那一级，以它为中心。鼠标移上去显示手形 */
+export class ClusterExpander {
+  private click = async (e: MapLayerMouseEvent) => {
+    const f = e.features?.[0];
+    const id = f?.properties?.cluster_id;
+    if (f == null || id == null) return;
+    const source = this.ctrl.map.getSource(f.source) as GeoJSONSource | undefined;
+    if (!source) return;
+    const m = this.ctrl.map;
+    // 拆开的级别可能就是当前级别（缩放有小数时气泡还没来得及拆），至少放大一级，点了总有变化
+    const zoom = Math.max(await source.getClusterExpansionZoom(id), m.getZoom() + 1);
+    m.easeTo({ center: (f.geometry as Point).coordinates as [number, number], zoom: Math.min(zoom, m.getMaxZoom()) });
+  };
+  private enter = () => (this.ctrl.map.getCanvas().style.cursor = "pointer");
+  private leave = () => (this.ctrl.map.getCanvas().style.cursor = "");
+
+  /** layers：气泡图层（通常是 clusterLayers 的 id 与 id-count） */
+  constructor(private ctrl: MapController, private layers: string[]) {
+    for (const l of layers) {
+      ctrl.map.on("click", l, this.click);
+      ctrl.map.on("mouseenter", l, this.enter);
+      ctrl.map.on("mouseleave", l, this.leave);
+    }
+  }
+
+  remove() {
+    for (const l of this.layers) {
+      this.ctrl.map.off("click", l, this.click);
+      this.ctrl.map.off("mouseenter", l, this.enter);
+      this.ctrl.map.off("mouseleave", l, this.leave);
+    }
   }
 }

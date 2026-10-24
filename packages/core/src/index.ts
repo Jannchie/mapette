@@ -1,4 +1,4 @@
-export { MapButtons, ScaleBar, type MapButtonsOptions } from "./controls";
+export { ClusterExpander, MapButtons, ScaleBar, type MapButtonsOptions } from "./controls";
 export { recoverImages, retryImage } from "./image-retry";
 export {
   createMap,
