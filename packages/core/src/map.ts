@@ -187,6 +187,15 @@ export async function createMap(o: MapetteOptions): Promise<MapController> {
   map.setPadding(usable());
   exposePadding(usable());
 
+  // 换留白时画面不动：maplibre 默认让同一个中心点移到新的可见区域中央，面板一收一展地图就跟着跳。
+  // 改成以新可见区域中央此刻对着的位置为中心，面板只是盖住或露出地图
+  const keepView = (q: PaddingOptions) => {
+    const c = o.container;
+    const x = q.left! + (c.clientWidth - q.left! - q.right!) / 2;
+    const y = q.top! + (c.clientHeight - q.top! - q.bottom!) / 2;
+    map.jumpTo({ center: map.unproject([x, y]), padding: q });
+  };
+
   // 紧凑署名在加载时会自动展开，盖住半张小地图；收回成 ⓘ，全文点一下就能看到
   // 数据源的署名到得比 load 晚（别家底图常见），等第一次 idle 再收一次
   const collapseAttribution = () => {
@@ -248,8 +257,8 @@ export async function createMap(o: MapetteOptions): Promise<MapController> {
       const q = usable();
       exposePadding(q);
       // setPadding 会打断进行中的动画，所以相机在动时等它停下再设
-      if (map.isMoving()) map.once("moveend", () => map.setPadding(usable()));
-      else map.setPadding(q);
+      if (map.isMoving()) map.once("moveend", () => keepView(usable()));
+      else keepView(q);
     },
     refresh() {
       void restyle();

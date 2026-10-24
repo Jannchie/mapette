@@ -59,6 +59,8 @@ const controls = ref<InstanceType<typeof MapControls>>();
 const sheet = ref<InstanceType<typeof MapSheet>>();
 /** 面板元素（站点有时要直接操作它，例如手机上点搜索框时不带动画地撑开抽屉） */
 const panel = computed(() => sheet.value?.el ?? null);
+/** 面板是底部抽屉的宽度（与 mapette.css 的断点一致）；桌面侧栏不随拖动收起 */
+const phone = typeof matchMedia === "function" ? matchMedia("(max-width: 640px)") : { matches: false };
 function onPadding(p: PaddingOptions) {
   padding.value = p;
   emit("padding", p);
@@ -66,9 +68,13 @@ function onPadding(p: PaddingOptions) {
 
 function onLoad(ctrl: MapController) {
   controller.value = ctrl;
-  // 手机上碰到地图：全屏的抽屉让开，回到半屏
+  // 手机上碰到地图：全屏的抽屉让开，回到半屏；拖动地图时收到最小，把地图让出来。
+  // dragstart 只在用手拖动时触发，选中点之后的自动平移（reveal、easeTo）和键盘平移都不会收起面板
   ctrl.map.getCanvasContainer().addEventListener("pointerdown", () => {
     if (snap.value === "full") snap.value = "half";
+  });
+  ctrl.map.on("dragstart", () => {
+    if (phone.matches) snap.value = "peek";
   });
   emit("load", ctrl);
 }

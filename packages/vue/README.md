@@ -11,7 +11,7 @@ The package ships its `.vue` sources so that your bundler compiles them for both
 ## Components
 
 - **`MapView`** – the map. Props mirror `createMap` (`preset`, `mapStyle`, `locale`, `center`, `zoom`, `interactive`, `dark`, `theme`, `padding`, `keepSources`, `popovers`, `scale`). Children get the controller through `useMap()`.
-- **`MapExplorer`** – the full-screen layout used by both sites: `MapView` (explore preset), scale bar, compass / locate / zoom buttons, `MapSheet`, padding wiring and keyboard shortcuts (`+ −` zoom, `L` locate, `N` north, `Esc` back; add your own with `shortcuts`). Slots: `#map`, `#header`, default, `#footer`.
+- **`MapExplorer`** – the full-screen layout used by both sites: `MapView` (explore preset), scale bar, compass / locate / zoom buttons, `MapSheet`, padding wiring (dragging the map lowers the sheet on phones), and keyboard shortcuts (`+ −` zoom, `L` locate, `N` north, `Esc` back; add your own with `shortcuts`). Slots: `#map`, `#header`, default, `#footer`.
 - **`MapSheet`** – side panel / bottom sheet on its own (`v-model:snap`, `@update:padding`).
 - **`MapFooter`** – attribution, data sources, shortcuts help, theme toggle and language select, with built-in texts in four languages.
 - **`MapControls`, `ScaleBar`, `LocationMarker`, `PhotoPins`, `ClusterExpand`, `ClusterPopover`, `MapPopover`** – thin wrappers over the core objects.
