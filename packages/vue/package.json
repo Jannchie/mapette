@@ -1,6 +1,6 @@
 {
   "name": "@mapette/vue",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Vue 3 components for @mapette/core: MapView, MapExplorer (full-screen map with side panel / bottom sheet), MapFooter, photo pins and popovers.",
   "type": "module",
   "license": "MIT",
