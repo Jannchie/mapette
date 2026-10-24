@@ -295,6 +295,12 @@
   height: 30px;
 }
 
+/* 指北针：图标随地图转动（transform 由 MapButtons 设置），转动时不做过渡，跟手 */
+.mapette-compass {
+  display: block;
+  color: var(--mapette-fg);
+}
+
 /* ---- 位置点 ---- */
 .mapette-location {
   position: relative;

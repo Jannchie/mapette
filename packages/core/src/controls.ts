@@ -10,6 +10,8 @@ const ICONS = {
   locate: svg('<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>'),
   plus: svg('<path d="M12 5v14M5 12h14"/>'),
   minus: svg('<path d="M5 12h14"/>'),
+  // 指北针：北半边用主题色，南半边是前景色的淡色；整个图标随地图的方位角反向转动，始终指向正北
+  compass: `<svg class="mapette-compass" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 2.5 15.5 12h-7Z" fill="var(--mapette-accent)"/><path d="M12 21.5 8.5 12h7Z" fill="currentColor" opacity="0.35"/></svg>`,
 };
 
 /**
@@ -50,16 +52,22 @@ export class ScaleBar {
 export interface MapButtonsOptions {
   locate?: boolean;
   zoom?: boolean;
-  labels?: { locate?: string; zoomIn?: string; zoomOut?: string };
+  /** 指北针：随地图转动指向正北，点一下转回正北、恢复俯视。默认在可以旋转的地图（explore）上显示 */
+  compass?: boolean;
+  labels?: { locate?: string; zoomIn?: string; zoomOut?: string; resetNorth?: string };
 }
 
-/** 右下角的定位与缩放按钮。定位用 maplibre 自带的控件画位置点，按钮换成自己的，原按钮用 CSS 隐藏 */
+/** 右下角的指北针、定位与缩放按钮。定位用 maplibre 自带的控件画位置点，按钮换成自己的，原按钮用 CSS 隐藏 */
 export class MapButtons {
   readonly el = document.createElement("div");
   private geolocate: GeolocateControl | null = null;
+  private needle: SVGElement | null = null;
+  private turn = () => {
+    if (this.needle) this.needle.style.transform = `rotate(${-this.ctrl.map.getBearing()}deg)`;
+  };
 
   constructor(private ctrl: MapController, o: MapButtonsOptions = {}) {
-    const labels = { locate: "Locate", zoomIn: "Zoom in", zoomOut: "Zoom out", ...o.labels };
+    const labels = { locate: "Locate", zoomIn: "Zoom in", zoomOut: "Zoom out", resetNorth: "Reset north", ...o.labels };
     const button = (icon: string, label: string, onClick: () => void) => {
       const b = document.createElement("button");
       b.type = "button";
@@ -70,6 +78,14 @@ export class MapButtons {
       return b;
     };
     this.el.className = "mapette-buttons";
+    if (o.compass ?? ctrl.preset === "explore") {
+      const b = button(ICONS.compass, labels.resetNorth, () => this.resetNorth());
+      b.classList.add("mapette-compass-btn");
+      this.needle = b.querySelector("svg");
+      this.el.append(b);
+      ctrl.map.on("rotate", this.turn);
+      this.turn();
+    }
     if (o.locate !== false) {
       const geolocate = new ctrl.lib.GeolocateControl({ positionOptions: { enableHighAccuracy: true }, trackUserLocation: true });
       ctrl.map.addControl(geolocate, "bottom-right");
@@ -89,7 +105,13 @@ export class MapButtons {
     this.geolocate?.trigger();
   }
 
+  /** 转回正北，同时恢复俯视（倾斜过的话） */
+  resetNorth() {
+    this.ctrl.map.easeTo({ bearing: 0, pitch: 0, duration: 400 });
+  }
+
   remove() {
+    this.ctrl.map.off("rotate", this.turn);
     if (this.geolocate && this.ctrl.map.hasControl(this.geolocate)) this.ctrl.map.removeControl(this.geolocate);
     this.el.remove();
   }

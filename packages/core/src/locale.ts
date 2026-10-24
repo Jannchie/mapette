@@ -39,6 +39,7 @@ export interface KitText {
   locate: string;
   zoomIn: string;
   zoomOut: string;
+  resetNorth: string;
   close: string;
   back: string;
   credits: string;
@@ -64,6 +65,7 @@ export const KIT_TEXT: Record<Locale, KitText> = {
     locate: "定位",
     zoomIn: "放大",
     zoomOut: "缩小",
+    resetNorth: "指北",
     close: "关闭",
     back: "返回",
     credits: "数据来源与授权",
@@ -83,6 +85,7 @@ export const KIT_TEXT: Record<Locale, KitText> = {
     locate: "定位",
     zoomIn: "放大",
     zoomOut: "縮小",
+    resetNorth: "指北",
     close: "關閉",
     back: "返回",
     credits: "資料來源與授權",
@@ -102,6 +105,7 @@ export const KIT_TEXT: Record<Locale, KitText> = {
     locate: "現在地",
     zoomIn: "拡大",
     zoomOut: "縮小",
+    resetNorth: "北を上に",
     close: "閉じる",
     back: "戻る",
     credits: "データ出典・ライセンス",
@@ -121,6 +125,7 @@ export const KIT_TEXT: Record<Locale, KitText> = {
     locate: "My location",
     zoomIn: "Zoom in",
     zoomOut: "Zoom out",
+    resetNorth: "Reset north",
     close: "Close",
     back: "Back",
     credits: "Sources and licenses",
@@ -146,6 +151,7 @@ export function baseShortcuts(locale: Locale | undefined): { keys: string[]; lab
   return [
     { keys: ["+", "−"], label: t.kbZoom },
     { keys: ["L"], label: t.locate },
+    { keys: ["N"], label: t.resetNorth },
     { keys: ["T"], label: t.kbTheme },
     { keys: ["?"], label: t.shortcuts },
   ];

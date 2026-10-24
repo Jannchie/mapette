@@ -18,13 +18,15 @@ export const MapControls = defineComponent({
   props: {
     locate: { type: Boolean, default: true },
     zoom: { type: Boolean, default: true },
+    /** 指北针；不给就在可以旋转的地图（explore）上显示 */
+    compass: { type: Boolean, default: undefined },
     labels: Object as PropType<MapButtonsOptions["labels"]>,
   },
   setup(props, { expose }) {
     const { locale } = useMap();
     // 不给 labels 就按地图的语言用自带的文字
-    const buttons = useMapObject((ctrl) => new MapButtons(ctrl, { locate: props.locate, zoom: props.zoom, labels: props.labels ?? kitText(locale.value) }));
-    expose({ locate: () => buttons.value?.locate() });
+    const buttons = useMapObject((ctrl) => new MapButtons(ctrl, { locate: props.locate, zoom: props.zoom, compass: props.compass, labels: props.labels ?? kitText(locale.value) }));
+    expose({ locate: () => buttons.value?.locate(), resetNorth: () => buttons.value?.resetNorth() });
     return () => null;
   },
 });

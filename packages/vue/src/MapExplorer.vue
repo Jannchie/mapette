@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<{
   labels?: { locate?: string; zoomIn?: string; zoomOut?: string };
   /** 站点自己的快捷键（按键名 → 处理函数），与内置的合并，同名时站点的优先 */
   shortcuts?: Record<string, KeyHandler>;
-  /** 关掉内置快捷键（+ − 缩放、L 定位、Esc 返回） */
+  /** 关掉内置快捷键（+ − 缩放、L 定位、N 指北、Esc 返回） */
   keyboard?: boolean;
 }>(), {
   mapStyle: undefined,
@@ -78,6 +78,7 @@ onMounted(() => {
     "=": () => void controller.value?.map.zoomIn(),
     "-": () => void controller.value?.map.zoomOut(),
     l: () => (controls.value as unknown as { locate(): void } | undefined)?.locate(),
+    n: () => (controls.value as unknown as { resetNorth(): void } | undefined)?.resetNorth(),
     Escape: (e) => emit("escape", e),
   };
   off = onShortcuts(() => ({ ...(props.keyboard ? builtin : {}), ...props.shortcuts }));
