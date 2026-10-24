@@ -20,6 +20,39 @@ export interface ThemeColors {
  */
 export type Theme = ThemeColors | { light?: ThemeColors; dark?: ThemeColors };
 
+/**
+ * 内置的几套主题，直接传给 MapView / MapExplorer 的 theme，或者 applyTheme。
+ * - neutral：默认配色（mapette.css 里的那套），中性灰
+ * - cool：陆地、建筑与小路偏蓝，更接近 Apple 地图
+ */
+export const themes = {
+  neutral: {},
+  cool: {
+    light: {
+      map: {
+        land: "#e8eef7",
+        urban: "#dfe7f2",
+        building: "#cfdaea",
+        buildingLine: "#bfcde2",
+        road: "#fcfdff",
+        roadCasing: "#c5d2e6",
+      },
+    },
+    dark: {
+      map: {
+        land: "#19202b",
+        urban: "#1e2634",
+        building: "#273244",
+        buildingLine: "#313e53",
+        road: "#33405a",
+        roadCasing: "#19202b",
+      },
+    },
+  },
+} satisfies Record<string, Theme>;
+
+export type ThemeName = keyof typeof themes;
+
 const uiVar = (key: UiKey) => `--mapette-${key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`)}`;
 
 /**
