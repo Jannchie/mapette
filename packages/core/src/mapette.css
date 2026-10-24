@@ -466,6 +466,15 @@ img.mapette-img-failed {
   border-radius: 12px;
   box-shadow: var(--mapette-shadow), 0 8px 24px var(--mapette-shadow-color);
 }
+/* 卡片内容：超过可见区域的高度时在这里滚动（滚动不放在卡片本身上，否则会裁掉露在外面的箭头） */
+.mapette-popover-body {
+  max-height: var(--mapette-popover-max-height, none);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: inherit;
+  scrollbar-width: thin;
+  scrollbar-color: var(--mapette-scroll-thumb) transparent;
+}
 .mapette-popover-close {
   position: absolute;
   top: 6px;

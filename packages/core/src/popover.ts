@@ -1,7 +1,7 @@
 // 地图上的弹出卡片：指向一个位置，始终留在地图的可见区域（避开侧栏 / 抽屉）里。
 // 定位交给 Floating UI：上方放不下就翻到下方，左右放不下就平移；位置被拖出可见区域时隐藏卡片。
 // 卡片元素由使用方提供（框架渲染的内容），这里只负责摆放、箭头和跟随地图移动。
-import { arrow, computePosition, flip, hide, offset, shift, type Placement, type Rect, type VirtualElement } from "@floating-ui/dom";
+import { arrow, computePosition, flip, hide, offset, shift, size, type Placement, type Rect, type VirtualElement } from "@floating-ui/dom";
 import type { MapController } from "./map";
 
 export interface PopoverOptions {
@@ -19,6 +19,8 @@ export class MapPopover {
   // maplibre 每渲染一帧触发一次 move，直接在里面重新定位，拖动时卡片紧跟着点。
   // （不要再套一层 requestAnimationFrame 并取消上一帧：move 正是在帧回调里触发的，会把每一帧的更新都取消掉，停下才动）
   private update = () => void this.place();
+  // 内容常常是异步出来的（列表、图片），卡片长高后要重新定位，否则会按打开时的小尺寸摆放、超出可见区域
+  private resize = new ResizeObserver(this.update);
 
   /** el：卡片（会被设为 absolute，定位相对于它的 offsetParent）；arrowEl：可选的小箭头 */
   constructor(private ctrl: MapController, private el: HTMLElement, lngLat: [number, number], private arrowEl?: HTMLElement | null, options: PopoverOptions = {}) {
@@ -30,6 +32,7 @@ export class MapPopover {
     el.style.top = "0";
     ctrl.map.on("move", this.update);
     ctrl.map.on("resize", this.update);
+    this.resize.observe(el);
     void this.place();
   }
 
@@ -65,6 +68,12 @@ export class MapPopover {
         offset(this.o.offset),
         flip({ rootBoundary: area, padding: this.o.padding }),
         shift({ rootBoundary: area, padding: this.o.padding }),
+        // 比可见区域还高时限制高度，内容在卡片里滚动（--mapette-popover-max-height，见 mapette.css）
+        size({
+          rootBoundary: area,
+          padding: this.o.padding,
+          apply: ({ availableHeight }) => this.el.style.setProperty("--mapette-popover-max-height", `${Math.max(120, Math.floor(availableHeight))}px`),
+        }),
         ...(this.arrowEl ? [arrow({ element: this.arrowEl, padding: 12 })] : []),
         hide({ rootBoundary: area }),
       ],
@@ -81,6 +90,7 @@ export class MapPopover {
   }
 
   remove() {
+    this.resize.disconnect();
     this.ctrl.map.off("move", this.update);
     this.ctrl.map.off("resize", this.update);
     this.el.classList.remove("mapette-popover");

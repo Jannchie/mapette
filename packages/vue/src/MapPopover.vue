@@ -41,7 +41,7 @@ onBeforeUnmount(() => popover.value?.remove());
     <button type="button" class="mapette-popover-close" :title="closeLabel" :aria-label="closeLabel" @click="emit('close')">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
     </button>
-    <slot />
+    <div class="mapette-popover-body"><slot /></div>
     <div ref="arrowEl" class="mapette-popover-arrow" />
   </div>
 </template>
