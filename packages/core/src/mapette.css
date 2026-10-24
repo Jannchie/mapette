@@ -279,8 +279,12 @@
 .mapette-buttons-group button:last-child {
   border-radius: 0 0 10px 10px;
 }
-.mapette-buttons button:hover {
-  background: var(--mapette-hover);
+/* 悬停色只有百分之几的不透明度，要叠在原来的底色上，不能替换它（替换后按钮几乎全透明）。
+   触屏点一下会一直停在 :hover，所以只给真正能悬停的设备 */
+@media (hover: hover) {
+  .mapette-buttons button:hover {
+    background: linear-gradient(var(--mapette-hover), var(--mapette-hover)), var(--mapette-bg);
+  }
 }
 /* 小地图：按钮放到右上角（右下角是署名 ⓘ），尺寸紧凑一些 */
 .mapette-compact .mapette-buttons,
