@@ -5,14 +5,19 @@
   "type": "module",
   "license": "MIT",
   "author": "Jianqi Pan <jannchie@gmail.com>",
-  "files": ["dist"],
+  "files": [
+    "src",
+    "dist"
+  ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
     }
   },
-  "sideEffects": ["**/*.css"],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "build": "vite build && vue-tsc -p tsconfig.json",
     "dev": "vite build --watch",

@@ -27,6 +27,7 @@ onMounted(() => {
   });
 });
 onBeforeUnmount(() => sheet?.destroy());
+defineExpose({ el });
 watch(snap, (s) => sheet?.setSnap(s));
 </script>
 

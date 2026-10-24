@@ -103,9 +103,11 @@ watch(() => props.mapStyle, (s) => controller.value?.setStyle(s));
 watch(() => props.locale, (l) => l && controller.value?.setLocale(l));
 watch(() => props.padding, (p) => p && controller.value?.setPadding(p));
 // 位置变了（例如换了一张照片）直接跳过去，不做动画；用 center 的数值比较，父组件每次传新数组也不会误触发
-watch(() => [props.center?.[0], props.center?.[1], props.zoom] as const, ([lng, lat, zoom]) => {
+// getter 返回字符串：返回数组的话每次都是新对象，父组件一重新渲染就会误判为「变了」，把地图拉回初始视野
+watch(() => `${props.center?.[0]},${props.center?.[1]},${props.zoom}`, () => {
   const m = controller.value?.map;
-  if (m && lng !== undefined && lat !== undefined) m.jumpTo({ center: [lng, lat], ...(zoom !== undefined ? { zoom } : {}) });
+  const [lng, lat] = props.center ?? [];
+  if (m && lng !== undefined && lat !== undefined) m.jumpTo({ center: [lng, lat], ...(props.zoom !== undefined ? { zoom: props.zoom } : {}) });
 });
 </script>
 

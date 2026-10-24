@@ -4,7 +4,7 @@
 // 站点只需要给出样式、往地图里放自己的图层组件（#map），往面板里放内容（#header / 默认 / #footer）。
 import { onShortcuts, type KeyHandler, type Locale, type MapController, type SheetSnap, type StyleInput, type Theme } from "@mapette/core";
 import type { PaddingOptions } from "maplibre-gl";
-import { onBeforeUnmount, onMounted, ref, shallowRef } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, shallowRef } from "vue";
 import { MapControls, ScaleBar } from "./components";
 import MapSheet from "./MapSheet.vue";
 import MapView from "./MapView.vue";
@@ -43,14 +43,23 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   load: [controller: MapController];
-  /** Esc：站点决定「返回」是什么（关掉详情、清空选择……） */
+  /** Esc：站点决定「返回」是什么（关掉详情、清空选择……）。要自己决定是否拦截，就在 shortcuts 里给 Escape */
   escape: [e: KeyboardEvent];
+  /** 面板挡住的边距（例如让浮在地图上的提示避开抽屉） */
+  padding: [padding: PaddingOptions];
 }>();
 
 const snap = defineModel<SheetSnap>("snap", { default: "half" });
 const padding = ref<PaddingOptions>({ top: 0, right: 0, bottom: 0, left: 0 });
 const controller = shallowRef<MapController | null>(null);
 const controls = ref<InstanceType<typeof MapControls>>();
+const sheet = ref<InstanceType<typeof MapSheet>>();
+/** 面板元素（站点有时要直接操作它，例如手机上点搜索框时不带动画地撑开抽屉） */
+const panel = computed(() => sheet.value?.el ?? null);
+function onPadding(p: PaddingOptions) {
+  padding.value = p;
+  emit("padding", p);
+}
 
 function onLoad(ctrl: MapController) {
   controller.value = ctrl;
@@ -75,7 +84,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => off?.());
 
-defineExpose({ controller, snap });
+defineExpose({ controller, snap, panel });
 </script>
 
 <template>
@@ -98,7 +107,7 @@ defineExpose({ controller, snap });
       <MapControls ref="controls" :labels="labels" />
       <slot name="map" />
     </MapView>
-    <MapSheet v-model:snap="snap" @update:padding="padding = $event">
+    <MapSheet ref="sheet" v-model:snap="snap" @update:padding="onPadding">
       <template v-if="$slots.header" #header><slot name="header" /></template>
       <slot />
       <template v-if="$slots.footer" #footer><slot name="footer" /></template>
