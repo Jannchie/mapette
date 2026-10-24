@@ -5,6 +5,13 @@
   "type": "module",
   "license": "MIT",
   "author": "Jianqi Pan <jannchie@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jannchie/mapette.git",
+    "directory": "packages/vue"
+  },
+  "homepage": "https://github.com/Jannchie/mapette/tree/main/packages/vue#readme",
+  "bugs": "https://github.com/Jannchie/mapette/issues",
   "files": [
     "src"
   ],
