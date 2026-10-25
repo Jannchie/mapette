@@ -503,7 +503,8 @@ img.mapette-img-failed {
   position: absolute;
   top: 8px;
   right: 8px;
-  z-index: 1;
+  /* 高于卡片内容里的定位元素（比如吸顶的标题），始终点得到 */
+  z-index: 3;
   display: grid;
   place-items: center;
   width: 24px;
