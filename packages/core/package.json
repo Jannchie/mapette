@@ -1,6 +1,6 @@
 {
   "name": "@mapette/core",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Framework-agnostic map UI on MapLibre for place-and-photo sites: Apple Maps–like basemap, cluster bubbles, photo pins, popovers, a side panel / bottom sheet, theme and locale helpers.",
   "type": "module",
   "license": "MIT",
