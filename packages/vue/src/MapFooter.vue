@@ -101,9 +101,10 @@ defineExpose({
       </dl>
     </div>
     <button type="button" class="mapette-foot-btn" :title="themeLabel" :aria-label="themeLabel" @click="cycle">
-      <svg v-if="pref === 'light'" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
-      <svg v-else-if="pref === 'dark'" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" /></svg>
-      <svg v-else viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.5" /><path d="M12 3.5a8.5 8.5 0 0 1 0 17Z" fill="currentColor" /></svg>
+      <!-- 图形取自 @jannchie/icons（sun / moon / theme），与站点其余图标同一套 -->
+      <svg v-if="pref === 'light'" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 12a4 4 0 108 0A4 4 0 108 12m10.5 0H21m-4.4 4.6l1.76 1.76M12 18.5V21M7.4 16.6L5.64 18.36M5.5 12H3M7.4 7.4L5.64 5.64M12 5.5V3m4.6 4.4l1.76-1.76" /></svg>
+      <svg v-else-if="pref === 'dark'" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.21 14.72A8.5 8.5 0 119.78 4.29q1.58-.27.76 1.11a6.5 6.5 0 008.56 8.56q1.38-.82 1.11.76z" /></svg>
+      <svg v-else viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 7.5a2 2 0 104 0 2 2 0 10-4 0m6 0h1.25m-5.25 4v1.25M4.67 10.33l-.88.88M3.5 7.5H2.25M4.67 4.67l-.88-.88M7.5 3.5V2.25m2.83 2.42l.88-.88M19 5L5 19m15.74-1.93a4.25 4.25 0 11-4.56-4.56 3.25 3.25 0 004.56 4.56z" /></svg>
     </button>
     <label class="mapette-lang" :title="t.language">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h8M8 3v2M10 5c-1 4-3 7-6 9M6 9c1 2 3 4 5 5M13 21l4-9 4 9M14.5 18h5" /></svg>
