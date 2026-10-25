@@ -494,6 +494,10 @@ img.mapette-img-failed {
   scrollbar-width: thin;
   scrollbar-color: var(--mapette-scroll-thumb) transparent;
 }
+/* 菜单（气泡里的列表等）内容可能很长：默认最高 360px，再长就在卡片里滚动，站点可用 --mapette-popover-menu-max-height 调整 */
+.mapette-popover-menu .mapette-popover-body {
+  max-height: min(var(--mapette-popover-max-height, 100vh), var(--mapette-popover-menu-max-height, 360px));
+}
 /* 关闭按钮：卡片顶部多半是照片，用半透明深色圆底加白色的叉（不加描边阴影，盖在照片上也干净） */
 .mapette-popover-close {
   position: absolute;
@@ -568,12 +572,17 @@ img.mapette-img-failed {
   width: 240px;
   font-size: 13px;
 }
+/* 标题吸顶：列表在 .mapette-popover-body 里滚动时数量一直看得到 */
 .mapette-cluster-pop-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   padding: 10px 40px 6px 12px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+  background: var(--mapette-bg-solid);
 }
-/* 列表不自己滚动：菜单优先完整显示，真的比可见区域还高时由外层的 .mapette-popover-body 滚动 */
+/* 列表不自己滚动：超过菜单的最大高度（见 .mapette-popover-menu .mapette-popover-body）时由外层滚动 */
 .mapette-cluster-pop ul {
   margin: 0;
   padding: 0 4px;
