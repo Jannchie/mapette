@@ -8,7 +8,7 @@ export type SheetSnap = "peek" | "half" | "full";
 export interface SheetOptions {
   /** 收起时露出的高度（px） */
   peekHeight?: number;
-  /** 半屏占视口高度的比例 */
+  /** 半屏占可用高度（面板所在容器的高度）的比例 */
   halfRatio?: number;
   /** 全屏时顶部留给地图的高度（px） */
   fullGap?: number;
@@ -22,6 +22,8 @@ const SNAPS: SheetSnap[] = ["peek", "half", "full"];
 /**
  * 给已有的面板元素加上抽屉行为。el 是面板，handle 是手机端的拖动把手。
  * 档位由 el 上的 mapette-sheet-{snap} 类名体现，高度在 CSS 里。
+ * 高度按面板所在的容器（定位父元素）算，不用 vh / dvh：iOS 主屏 PWA 里视口单位和实际可用的高度对不上
+ * （状态栏算进去了），按视口单位算的面板会超出屏幕。
  */
 export class Sheet {
   private snap: SheetSnap;
@@ -45,7 +47,7 @@ export class Sheet {
     this.snap = options.snap ?? "half";
     el.classList.add("mapette-sheet");
     el.style.setProperty("--peek", `${this.o.peekHeight}px`);
-    el.style.setProperty("--half", `${this.o.halfRatio * 100}dvh`);
+    el.style.setProperty("--half", `${this.o.halfRatio * 100}%`);
     el.style.setProperty("--full-gap", `${this.o.fullGap}px`);
     this.applySnap();
     // 整个面板都能拖（不只是把手）：触摸用 touch 事件，才能在 touchmove 里拦下浏览器自己的滚动；鼠标用 pointer 事件
@@ -75,9 +77,16 @@ export class Sheet {
     for (const s of SNAPS) this.el.classList.toggle(`mapette-sheet-${s}`, s === this.snap);
   }
 
+  /** 面板所在容器的范围（MapExplorer 里是铺满屏幕的 .mapette-explorer），没有定位父元素时是视口 */
+  private box() {
+    const p = this.el.offsetParent;
+    return p ? p.getBoundingClientRect() : { top: 0, bottom: innerHeight, height: innerHeight };
+  }
+
   /** 各档高度（px），和 CSS 里 .mapette-sheet-* 的高度对应 */
   private height(s: SheetSnap) {
-    return s === "peek" ? this.o.peekHeight : s === "half" ? innerHeight * this.o.halfRatio : innerHeight - this.o.fullGap;
+    const h = this.box().height;
+    return s === "peek" ? this.o.peekHeight : s === "half" ? h * this.o.halfRatio : h - this.o.fullGap;
   }
 
   private start(x: number, y: number, t: number, target: Element) {
@@ -203,7 +212,7 @@ export class Sheet {
     const beside = r.width < innerWidth * 0.6;
     const next = beside
       ? { top: 0, right: 0, bottom: 0, left: Math.round(r.right) }
-      : { top: 0, right: 0, bottom: Math.round(innerHeight - r.top), left: 0 };
+      : { top: 0, right: 0, bottom: Math.round(this.box().bottom - r.top), left: 0 };
     const key = `${next.left},${next.bottom}`;
     if (key === this.last) return;
     this.last = key;
